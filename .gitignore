@@ -1,3 +1,7 @@
+# =========================
+# COMPILATION / BUILD FILES
+# =========================
+
 # Prerequisites
 *.d
 
@@ -6,50 +10,91 @@
 *.ko
 *.obj
 *.elf
+*.gch
+*.pch
+*.su
+*.dwo
 
-# Linker output
+# Linker/Build output
 *.ilk
 *.map
 *.exp
+*.out
+*.hex
+*.mod*
+*.cmd
+modules.order
+Module.symvers
+Mkfile.old
+.tmp_versions/
 
-# Precompiled Headers
-*.gch
-*.pch
+# Executables
+*.exe
+*.app
+a.out
+main
+*.i*86
+*.x86_64
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
+# Shared Libraries / Dynamic Libraries
 *.dll
 *.so
 *.so.*
 *.dylib
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+# Libraries (static + shared)
+*.lib
+*.a
+*.la
+*.lo
 
 # Debug files
 *.dSYM/
-*.su
 *.idb
 *.pdb
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
+# Kernel module config
 dkms.conf
 
-# debug information files
-*.dwo
+
+# =========================
+# PROJECT DIRECTORIES
+# =========================
+
+# Build directory
+build/*
+!build/.gitkeep
+
+# Test results
+tests/test_results/*
+!tests/test_results/.gitkeep
+
+
+# =========================
+# TEMP & SYSTEM FILES
+# =========================
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+temp/
+
+
+# =========================
+# EDITOR / IDE SETTINGS
+# =========================
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains / CLion
+.idea/
+
+# Vim/Swap files
+*.swp
+*.swo
+*~
