@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "D:\\source\\repos\\dev-hanhhanh-test\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1C5ED859-644D-7AFF-D292-61333DE64E44}|dev-hanhhanh-test.vcxproj|D:\\source\\repos\\dev-hanhhanh-test\\src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{1C5ED859-644D-7AFF-D292-61333DE64E44}|dev-hanhhanh-test.vcxproj|solutionrelative:src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\source\\repos\\dev-hanhhanh-test\\src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -28,7 +28,7 @@
               "RelativeDocumentMoniker": "src\\main.c",
               "ToolTip": "D:\\source\\repos\\dev-hanhhanh-test\\src\\main.c",
               "RelativeToolTip": "src\\main.c",
-              "ViewState": "AgIAAGgAAAAAAAAAAAAmwHYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGsAAAAAAAAAAAAIwHYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2025-11-01T20:11:41.106Z",
               "EditorCaption": ""

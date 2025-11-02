@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\source\\repos\\dev-hanhhanh-test\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C4C089D9-A21F-5F82-30B3-DEF456377E60}|HANHTEST.vcxproj|D:\\source\\repos\\dev-hanhhanh-test\\src\\ui\\menu.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{C4C089D9-A21F-5F82-30B3-DEF456377E60}|HANHTEST.vcxproj|solutionrelative:src\\ui\\menu.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "menu.c",
+              "DocumentMoniker": "D:\\source\\repos\\dev-hanhhanh-test\\src\\ui\\menu.c",
+              "RelativeDocumentMoniker": "src\\ui\\menu.c",
+              "ToolTip": "D:\\source\\repos\\dev-hanhhanh-test\\src\\ui\\menu.c",
+              "RelativeToolTip": "src\\ui\\menu.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-11-02T10:05:24.054Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
