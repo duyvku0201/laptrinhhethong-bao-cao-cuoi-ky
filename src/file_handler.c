@@ -1,4 +1,5 @@
-﻿#include "io.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "io.h"
 #include <stdio.h>
 
 // Kiểm tra file tồn tại

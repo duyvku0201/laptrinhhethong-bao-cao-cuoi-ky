@@ -1,4 +1,5 @@
-﻿#include "io.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "io.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -150,7 +151,7 @@ static bool ReadProcessCount(int* ProcessCount) {
     return true;
 }
 
-// Đọc danh sách processes từ console (sử dụng early return)
+// Đọc danh sách processes từ console
 bool ReadProcessesFromConsole(Process* Processes, int* ProcessCount) {
     if (!ReadProcessCount(ProcessCount)) return false;
 

@@ -1,4 +1,5 @@
-﻿#ifndef IO_H
+﻿#define _CRT_SECURE_NO_WARNINGS
+#ifndef IO_H
 #define IO_H
 
 #include "process.h"
@@ -14,13 +15,13 @@ bool ReadProcessesFromConsole(Process* Processes, int* ProcessCount);
 bool LoadProcessesFromFile(const char* Filename, Process* Processes, int* ProcessCount);
 
 // Ghi kết quả vào file
-bool SaveResultsToFile(const char* Filename, const char* AlgorithmName, 
-                       Process* Processes, int ProcessCount,
-                       float AvgWaitingTime, float AvgTurnaroundTime);
+bool SaveResultsToFile(const char* Filename, const char* AlgorithmName,
+    Process* Processes, int ProcessCount,
+    float AvgWaitingTime, float AvgTurnaroundTime);
 
 // Hiển thị bảng kết quả
-void DisplayResults(const char* AlgorithmName, Process* Processes, 
-                   int ProcessCount, float AvgWaitingTime, float AvgTurnaroundTime);
+void DisplayResults(const char* AlgorithmName, Process* Processes,
+    int ProcessCount, float AvgWaitingTime, float AvgTurnaroundTime);
 
 // Kiểm tra file tồn tại
 bool FileExists(const char* Filename);

@@ -1,4 +1,5 @@
-﻿#include "../include/io.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "../include/io.h"
 #include <stdio.h>
 
 // Simulate scheduling results cho test

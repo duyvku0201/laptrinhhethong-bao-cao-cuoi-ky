@@ -1,4 +1,5 @@
-﻿#ifndef PROCESS_H
+﻿#define _CRT_SECURE_NO_WARNINGS
+#ifndef PROCESS_H
 #define PROCESS_H
 
 #include <stdbool.h>
@@ -20,4 +21,4 @@ typedef struct {
     bool IsCompleted;
 } Process;
 
-#endif#pragma once
+#endif

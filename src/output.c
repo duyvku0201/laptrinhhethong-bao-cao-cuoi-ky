@@ -1,4 +1,5 @@
-﻿#include "io.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "io.h"
 #include <stdio.h>
 
 // In header của bảng
