@@ -90,10 +90,7 @@ temp/
 
 # Visual Studio Code
 .vscode/
-.vs/
-Debug/
-*.obj
-*.exe
+
 
 # JetBrains / CLion
 .idea/
