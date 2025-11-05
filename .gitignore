@@ -4,6 +4,13 @@
 
 # Prerequisites
 *.d
+# Visual Studio cache
+.vs/
+
+# Build output
+*/Debug/
+*.exe
+*.obj
 
 # Object files
 *.o
