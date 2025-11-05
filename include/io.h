@@ -1,3 +1,4 @@
+
 #ifndef IO_H
 #define IO_H
 
@@ -8,3 +9,4 @@ int read_from_keyboard(Process p[], int* n);
 int write_to_file(const char* filename, Process p[], int n, const char* algo);
 
 #endif
+
