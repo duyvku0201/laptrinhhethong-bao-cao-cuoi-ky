@@ -89,8 +89,10 @@ temp/
 # =========================
 
 # Visual Studio Code
+.vs
 .vscode/
-
+*.vcxproj.user
+*.vcxproj.filters
 
 # JetBrains / CLion
 .idea/
