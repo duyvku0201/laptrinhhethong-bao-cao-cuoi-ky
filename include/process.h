@@ -1,25 +1,43 @@
+#define _CRT_SECURE_NO_WARNINGS
 #pragma once
 #ifndef PROCESS_H
 #define PROCESS_H
 
-// Cấu trúc dữ liệu mô tả một tiến trình (Process)
+#include <stdbool.h>
+
+#define MAX_PROCESSES 100
+#define MAX_PROCESS_ID_LENGTH 20
+
+// ==============================
+// Cấu trúc lưu thông tin process
+// ==============================
 typedef struct {
-    // THÔNG TIN ĐẦU VÀO 
-    int pid;             // Mã tiến trình (Process ID)
-    int arrival_time;    // Thời điểm đến hệ thống (Arrival Time)
-    int burst_time;      // Thời gian cần CPU để chạy hết (Burst Time)
-    int priority;        // Độ ưu tiên (Priority) - số càng nhỏ/càng lớn tùy quy ước
-    int remaining_time;  // Thời gian CPU còn lại chưa chạy (dùng cho các giải thuật Preemptive Priority, SRTF, RR)
+    // ----- PHIÊN BẢN TỪ dev/phuoctoan -----
+    char ProcessId[MAX_PROCESS_ID_LENGTH];  // ID tiến trình dạng chuỗi
+    int ArrivalTime;                        // Thời điểm đến
+    int BurstTime;                          // Thời gian xử lý
+    int Priority;                           // Mức độ ưu tiên
+    int RemainingTime;                      // Thời gian còn lại
+    int WaitingTime;                        // Thời gian chờ
+    int TurnaroundTime;                     // Thời gian hoàn thành vòng đời
+    int ResponseTime;                       // Thời gian phản hồi
+    int CompletionTime;                     // Thời điểm hoàn thành
+    bool IsCompleted;                       // Trạng thái hoàn thành (true/false)
 
-    // THÔNG TIN TÍNH TOÁN 
-    int completion_time;   // Thời điểm tiến trình hoàn thành (Completion Time - CT)
-    int waiting_time;      // Thời gian chờ (Waiting Time) = TAT - BT
-    int turnaround_time;   // Thời gian hoàn thành vòng đời (Turnaround Time - TAT) = CT - AT
-    int response_time;     // Thời gian đáp ứng (Response Time - RT) = thời điểm chạy lần đầu (Start Time) - AT
-    int start_time;        // Thời điểm tiến trình được CPU chạy lần đầu tiên (nếu chưa chạy = -1)
+    // ----- PHIÊN BẢN TỪ main -----
+    int pid;                                // Mã tiến trình (Process ID - dạng số)
+    int arrival_time;                       // Thời điểm đến hệ thống
+    int burst_time;                         // Thời gian cần CPU
+    int priority;                           // Độ ưu tiên (Priority)
+    int remaining_time;                     // Thời gian còn lại để chạy
 
-    //TRẠNG THÁI
-    int is_completed;      // Cờ đánh dấu tiến trình đã hoàn thành hay chưa (0 = chưa xong, 1 = đã xong)
+    // Thông tin tính toán
+    int completion_time;                    // Thời điểm hoàn thành (CT)
+    int waiting_time;                       // Thời gian chờ (WT = TAT - BT)
+    int turnaround_time;                    // Thời gian hoàn thành vòng đời (TAT = CT - AT)
+    int response_time;                      // Thời gian đáp ứng (RT = Start - AT)
+    int start_time;                         // Thời điểm bắt đầu chạy
+    int is_completed;                       // 0 = chưa xong, 1 = đã hoàn thành
 } Process;
 
 #endif // PROCESS_H
