@@ -1,3 +1,4 @@
+
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #ifndef IO_H
 #define IO_H
@@ -33,3 +34,4 @@ bool ValidateProcessData(Process* ProcessData);
 void ClearInputBuffer(void);
 
 #endif
+
