@@ -63,7 +63,7 @@ int main()
     if (input_type == 1)
     {
         printf("\nEnter filename: ");
-        scanf("%s", fname);
+        scanf("%99s", fname);
 
         if (!read_from_file(fname, proc, &n))
         {
