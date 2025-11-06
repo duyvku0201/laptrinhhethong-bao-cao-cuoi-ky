@@ -4,6 +4,8 @@
 
 # Prerequisites
 *.d
+.vs/
+Debug/
 
 # Object files
 *.o
@@ -90,6 +92,7 @@ temp/
 
 # Visual Studio Code
 .vscode/
+
 
 # JetBrains / CLion
 .idea/
