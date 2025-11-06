@@ -91,7 +91,7 @@ void run_scheduling(int choice, Process p[], int n)
 
     case 8:
         printf("\nEnter filename to save results: ");
-        scanf("%s", filename);
+        scanf("%99s", filename);
         write_to_file(filename, p, n, "Custom Save");
         break;
 
