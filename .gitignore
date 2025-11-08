@@ -87,6 +87,8 @@ temp/
 # =========================
 # EDITOR / IDE SETTINGS
 # =========================
+# Visual Studio
+.vs/
 
 # Visual Studio Code
 .vs
