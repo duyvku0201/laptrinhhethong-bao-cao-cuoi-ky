@@ -189,7 +189,7 @@ git --version
 # Clone repository
 git clone https://github.com/duyvku0201/laptrinhhethong-bao-cao-cuoi-ky
 # Navigate to project directory
-cd CPU-Scheduling-Algorithms
+cd ./laptrinhhethong-bao-cao-cuoi-ky
 # Build project
 make
 # Run
