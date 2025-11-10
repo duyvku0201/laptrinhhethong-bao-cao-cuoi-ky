@@ -87,11 +87,9 @@ temp/
 # =========================
 # EDITOR / IDE SETTINGS
 # =========================
-# Visual Studio
-.vs/
 
-# Visual Studio Code
-.vs
+# Visual Studio and Visual Studio Code
+.vs/
 .vscode/
 *.vcxproj.user
 *.vcxproj.filters
