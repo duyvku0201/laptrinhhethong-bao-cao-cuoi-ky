@@ -38,8 +38,8 @@ static bool ReadProcessCountFromFile(FILE* File, int* ProcessCount) {
 
 // Đọc một process từ file
 static bool ReadSingleProcessFromFile(FILE* File, Process* P, int Index) {
-    int ReadItems = fscanf(File, "%s %d %d %d",
-        P->ProcessId,
+    int ReadItems = fscanf(File, "%d %d %d %d",
+        &P->ProcessId,
         &P->ArrivalTime,
         &P->BurstTime,
         &P->Priority);
@@ -54,6 +54,7 @@ static bool ReadSingleProcessFromFile(FILE* File, Process* P, int Index) {
     P->TurnaroundTime = 0;
     P->ResponseTime = -1;
     P->CompletionTime = 0;
+    P->StartTime = -1;
     P->IsCompleted = false;
 
     if (!ValidateProcessData(P)) {
@@ -61,7 +62,7 @@ static bool ReadSingleProcessFromFile(FILE* File, Process* P, int Index) {
         return false;
     }
 
-    printf("Process %s: AT=%d, BT=%d, Priority=%d\n",
+    printf("Process %d: AT=%d, BT=%d, Priority=%d\n",
         P->ProcessId, P->ArrivalTime, P->BurstTime, P->Priority);
 
     return true;
@@ -117,7 +118,7 @@ static void WriteHeader(FILE* File, const char* AlgorithmName) {
 
 // Ghi một process vào file
 static void WriteSingleProcess(FILE* File, const Process* P) {
-    fprintf(File, "%-7s | %7d | %5d | %7d | %10d | %8d\n",
+    fprintf(File, "%-7d | %7d | %5d | %7d | %10d | %8d\n",
         P->ProcessId, P->ArrivalTime, P->BurstTime,
         P->WaitingTime, P->TurnaroundTime, P->ResponseTime);
 }

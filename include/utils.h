@@ -26,12 +26,11 @@ static inline void swap_int(int *a, int *b) {
     int t = *a; *a = *b; *b = t;
 }
 
-// UI utilities (header-only stubs for portability)
-static inline void clear_screen(void) {
-    // ANSI clear screen + move cursor to 0,0
-    fputs("\x1b[2J\x1b[H", stdout);
-    fflush(stdout);
-}
+// UI utilities - declarations (implementations in colors.c)
+void print_colored(const char *color, const char *text);
+void print_box_header(const char *title);
+void print_separator(void);
+void clear_screen(void);
 
 static inline void pause_enter(void) {
     fputs("\nPress Enter to continue...", stdout);
