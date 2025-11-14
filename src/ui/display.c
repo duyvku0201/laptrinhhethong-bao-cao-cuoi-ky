@@ -17,15 +17,15 @@ static void print_table_header(void) {
 
 static void print_row(const Process *pr) {
     // Prefer numeric fields when available (pid/arrival_time/etc.)
-    int pid = pr->pid ? pr->pid : 0;
-    int at = pr->arrival_time ? pr->arrival_time : pr->ArrivalTime;
-    int bt = pr->burst_time ? pr->burst_time : pr->BurstTime;
-    int pri = pr->priority ? pr->priority : pr->Priority;
+    int pid = pr->ProcessId ? pr->ProcessId : 0;
+    int at = pr->ArrivalTime ? pr->ArrivalTime : pr->ArrivalTime;
+    int bt = pr->BurstTime ? pr->BurstTime : pr->BurstTime;
+    int pri = pr->Priority ? pr->Priority : pr->Priority;
 
-    int ct = pr->completion_time ? pr->completion_time : pr->CompletionTime;
-    int tat = pr->turnaround_time ? pr->turnaround_time : pr->TurnaroundTime;
-    int wt = pr->waiting_time ? pr->waiting_time : pr->WaitingTime;
-    int rt = pr->response_time ? pr->response_time : pr->ResponseTime;
+    int ct = pr->CompletionTime ? pr->CompletionTime : pr->CompletionTime;
+    int tat = pr->TurnaroundTime ? pr->TurnaroundTime : pr->TurnaroundTime;
+    int wt = pr->WaitingTime ? pr->WaitingTime : pr->WaitingTime;
+    int rt = pr->ResponseTime ? pr->ResponseTime : pr->ResponseTime;
 
     printf("| %3d | %3d | %3d | %8d | %3d | %3d | %3d | %3d |\n",
            pid, at, bt, pri, ct, tat, wt, rt);
@@ -43,9 +43,9 @@ void display_results(Process p[], int n, const char *algo) {
     for (int i = 0; i < n; ++i) {
         print_row(&p[i]);
         // Sum with either field set
-        int wt = p[i].waiting_time ? p[i].waiting_time : p[i].WaitingTime;
-        int tat = p[i].turnaround_time ? p[i].turnaround_time : p[i].TurnaroundTime;
-        int rt = p[i].response_time ? p[i].response_time : p[i].ResponseTime;
+        int wt = p[i].WaitingTime ? p[i].WaitingTime : p[i].WaitingTime;
+        int tat = p[i].TurnaroundTime ? p[i].TurnaroundTime : p[i].TurnaroundTime;
+        int rt = p[i].ResponseTime ? p[i].ResponseTime : p[i].ResponseTime;
         sum_wt += wt; sum_tat += tat;
         if (rt >= 0) { sum_rt += rt; counted_rt++; }
     }
@@ -66,7 +66,7 @@ void display_gantt_chart(Process p[], int n) {
     printf("\nGantt Chart (order of PIDs as given):\n");
     for (int i = 0; i < n; ++i) printf("+----");
     printf("+\n");
-    for (int i = 0; i < n; ++i) printf("| %2d ", p[i].pid);
+    for (int i = 0; i < n; ++i) printf("| %2d ", p[i].ProcessId);
     printf("|\n");
     for (int i = 0; i < n; ++i) printf("+----");
     printf("+\n");

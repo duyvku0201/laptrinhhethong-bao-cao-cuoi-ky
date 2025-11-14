@@ -11,9 +11,9 @@ void ClearInputBuffer(void) {
 }
 
 // Kiểm tra Process ID hợp lệ
-static bool IsValidProcessId(const char* ProcessId) {
-    if (strlen(ProcessId) == 0) {
-        printf("Error: Process ID is empty\n");
+static bool IsValidProcessId(int ProcessId) {
+    if (ProcessId <= 0) {
+        printf("Error: Process ID must be > 0\n");
         return false;
     }
     return true;
@@ -69,7 +69,7 @@ static void InitializeProcessDefaults(Process* ProcessData) {
 // Đọc Process ID
 static bool ReadProcessId(Process* ProcessData) {
     printf("Process ID: ");
-    if (scanf("%s", ProcessData->ProcessId) != 1) {
+    if (scanf("%d", &ProcessData->ProcessId) != 1) {
         ClearInputBuffer();
         return false;
     }
