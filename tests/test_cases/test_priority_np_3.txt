@@ -1,0 +1,53 @@
+﻿4
+1 0 10 5
+2 2 2 1
+3 4 3 2
+4 6 1 1
+Dòng 1: 4
+→ Có 4 processes
+
+Dòng 2: 1 0 10 5
+→ Process P1:
+   - PID = 1
+   - AT = 0 (đến đầu tiên)
+   - BT = 10 (RẤT DÀI - 10 time units)
+   - Priority = 5 (THẤP NHẤT - số lớn nhất)
+   
+   ⚠️ ĐÂY LÀ ĐIỂM QUAN TRỌNG:
+   P1 đến đầu tiên NHƯNG có priority thấp nhất
+   → Sẽ bị "starve" (đói) - phải chờ rất lâu!
+
+Dòng 3: 2 2 2 1
+→ Process P2:
+   - PID = 2
+   - AT = 2 (đến sau P1)
+   - BT = 2 (ngắn)
+   - Priority = 1 (CAO NHẤT - chạy trước tiên khi đến)
+
+Dòng 4: 3 4 3 2
+→ Process P3:
+   - PID = 3
+   - AT = 4
+   - BT = 3
+   - Priority = 2 (cao hơn P1 nhưng thấp hơn P2)
+
+Dòng 5: 4 6 1 1
+→ Process P4:
+   - PID = 4
+   - AT = 6
+   - BT = 1 (rất ngắn)
+   - Priority = 1 (CAO NHẤT, bằng P2)
+   +-----+-----+-----+----------+-----+-----+-----+-----+
+| PID |  AT |  BT | Priority |  CT | TAT |  WT |  RT |
++-----+-----+-----+----------+-----+-----+-----+-----+
+|   1 |   0 |  10 |        5 |  10 |  10 |   0 |   0 |
+|   2 |   2 |   2 |        1 |  12 |  10 |   8 |   8 |
+|   3 |   4 |   3 |        2 |  16 |  12 |   9 |   9 |
+|   4 |   6 |   1 |        1 |  13 |   7 |   6 |   6 |
++-----+-----+-----+----------+-----+-----+-----+-----+
+
+Average Waiting Time    : 5.75
+Average Turnaround Time : 9.75
+
+⚠️ LESSON: P2 và P4 có priority cao nhưng phải chờ P1 (low priority)
+           chạy xong vì P1 đến trước và non-preemptive!
