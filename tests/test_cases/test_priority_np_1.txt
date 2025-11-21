@@ -1,0 +1,47 @@
+﻿4
+1 0 5 2
+2 1 3 1
+3 2 8 3
+4 3 6 2
+Dòng 1: 4
+→ Có 4 processes
+
+Dòng 2: 1 0 5 2
+→ Process P1:
+   - PID = 1
+   - Arrival Time = 0 (đến lúc thời điểm 0)
+   - Burst Time = 5 (cần chạy 5 time units)
+   - Priority = 2 (ưu tiên trung bình, số càng nhỏ càng cao)
+
+Dòng 3: 2 1 3 1
+→ Process P2:
+   - PID = 2
+   - Arrival Time = 1 (đến lúc thời điểm 1)
+   - Burst Time = 3 (cần chạy 3 time units)
+   - Priority = 1 (ưu tiên CAO NHẤT - số nhỏ nhất)
+
+Dòng 4: 3 2 8 3
+→ Process P3:
+   - PID = 3
+   - Arrival Time = 2 (đến lúc thời điểm 2)
+   - Burst Time = 8 (cần chạy 8 time units)
+   - Priority = 3 (ưu tiên thấp nhất - số lớn nhất)
+
+Dòng 5: 4 3 6 2
+→ Process P4:
+   - PID = 4
+   - Arrival Time = 3 (đến lúc thời điểm 3)
+   - Burst Time = 6 (cần chạy 6 time units)
+   - Priority = 2 (ưu tiên trung bình, giống P1)
+   +-----+-----+-----+----------+-----+-----+-----+-----+
+| PID |  AT |  BT | Priority |  CT | TAT |  WT |  RT |
++-----+-----+-----+----------+-----+-----+-----+-----+
+|   1 |   0 |   5 |        2 |   5 |   5 |   0 |   0 |
+|   2 |   1 |   3 |        1 |   8 |   7 |   4 |   4 |
+|   3 |   2 |   8 |        3 |  22 |  20 |  12 |  12 |
+|   4 |   3 |   6 |        2 |  14 |  11 |   5 |   5 |
++-----+-----+-----+----------+-----+-----+-----+-----+
+
+Average Waiting Time    : 5.25
+Average Turnaround Time : 10.75
+Average Response Time   : 5.25

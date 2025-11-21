@@ -1,134 +1,159 @@
-
+﻿
 #define _CRT_SECURE_NO_WARNINGS
 
+/**
+ * @file main.c
+ * @brief Main entry point của chương trình
+ */
+
+#include "include/process.h"
+#include "include/algorithms.h"
+#include "include/io.h"
+#include "include/display.h"
+#include "include/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "process.h"
-#include "algorithms.h"
-#include "io.h"
-#include "display.h"
-#include "utils.h"
+ /**
+  * @brief Main function
+  * Flow:
+  * 1. Hiển thị header
+  * 2. Đọc input (file hoặc keyboard)
+  * 3. Hiển thị menu chọn algorithm
+  * 4. Chạy algorithm được chọn
+  * 5. Hiển thị kết quả
+  * 6. Lặp lại hoặc exit
+  */
+int main() {
+    // Khai báo biến
+    Process processes[MAX_PROCESSES];  // Mảng processes
+    Process original[MAX_PROCESSES];   // Backup để so sánh
+    int n = 0;                         // Số processes
+    int choice;                        // Lựa chọn của user
+    int time_quantum;                  // Time quantum cho RR
 
-void show_menu();
-void run_scheduling(int choice, Process p[], int n);
+    // BƯỚC 1: Hiển thị header
+    print_header("CPU SCHEDULING ALGORITHMS SIMULATOR");
 
-void print_header()
-{
-    printf("\n");
-    printf("*************************************************\n");
-    printf("*                                               *\n");
-    printf("*    CPU SCHEDULING ALGORITHMS SIMULATOR       *\n");
-    printf("*                Version 1.0                    *\n");
-    printf("*                                               *\n");
-    printf("*       Developed by: Group [X]                 *\n");
-    printf("*       Course: Operating Systems               *\n");
-    printf("*                                               *\n");
-    printf("*************************************************\n");
-    printf("\n");
-}
+    printf("Welcome to CPU Scheduling Simulator!\n");
+    printf("This program implements 6 scheduling algorithms:\n");
+    printf("1. FCFS (First Come First Serve)\n");
+    printf("2. SJF (Shortest Job First)\n");
+    printf("3. SRTF (Shortest Remaining Time First)\n");
+    printf("4. Priority (Non-Preemptive)\n");
+    printf("5. Priority (Preemptive)\n");
+    printf("6. Round Robin\n\n");
 
-void print_process_table(Process p[], int n)
-{
-    printf("\n=========================================\n");
-    printf("           Loaded Processes              \n");
-    printf("=========================================\n");
-    printf("PID\tAT\tBT\tPriority\n");
-    printf("-----------------------------------------\n");
-    for (int i = 0; i < n; i++)
-    {
-        printf("%d\t%d\t%d\t%d\n",
-               p[i].ProcessId,
-               p[i].ArrivalTime,
-               p[i].BurstTime,
-               p[i].Priority);
-    }
-    printf("=========================================\n");
-}
+    // BƯỚC 2: Đọc input
+    printf("How do you want to input process data?\n");
+    printf("1. Read from file\n");
+    printf("2. Enter from keyboard\n");
+    printf("Enter choice [1-2]: ");
 
-int main()
-{
-    Process proc[100];
-    int n, choice, input_type;
-    char fname[100];
+    int input_choice;
+    scanf("%d", &input_choice);
 
-    print_header();
+    if (input_choice == 1) {
+        // Đọc từ file
+        char filename[256];
+        printf("Enter filename (e.g., tests/test_cases/test1.txt): ");
+        scanf("%s", filename);
 
-    printf("=========================================\n");
-    printf("                INPUT METHOD              \n");
-    printf("=========================================\n");
-    printf("  1. Read from file\n");
-    printf("  2. Enter from keyboard\n");
-    printf("=========================================\n");
-    printf("Select input method: ");
-    scanf("%d", &input_type);
-
-    if (input_type == 1)
-    {
-        printf("\nEnter filename: ");
-        scanf("%s", fname);
-
-        if (!read_from_file(fname, proc, &n))
-        {
-            char path[200];
-            sprintf(path, "tests/test_cases/%s", fname);
-            if (!read_from_file(path, proc, &n))
-            {
-                printf("\nError: Cannot open file '%s'\n", fname);
-                printf("Expected format:\n");
-                printf("Line 1: number_of_processes\n");
-                printf("Next lines: PID arrival_time burst_time priority\n");
-                return 1;
-            }
-        }
-        printf("\nFile loaded successfully!\n");
-    }
-    else if (input_type == 2)
-    {
-        if (!read_from_keyboard(proc, &n))
-        {
-            printf("\nError: Failed to read input\n");
+        if (!read_from_file(filename, processes, &n)) {
+            printf("Error reading file. Exiting.\n");
             return 1;
         }
-        printf("\nInput received successfully!\n");
     }
-    else
-    {
-        printf("\nError: Invalid input method\n");
+    else if (input_choice == 2) {
+        // Đọc từ keyboard
+        if (!read_from_keyboard(processes, &n)) {
+            printf("Error reading input. Exiting.\n");
+            return 1;
+        }
+    }
+    else {
+        printf("Invalid choice. Exiting.\n");
         return 1;
     }
 
-    print_process_table(proc, n);
+    // Backup processes gốc
+    copy_processes(original, processes, n);
 
-    printf("\nPress Enter to continue...");
-    getchar();
-    getchar();
+    // BƯỚC 3: Main loop
+    do {
+        // Reset processes về trạng thái ban đầu
+        copy_processes(processes, original, n);
 
-    while (1)
-    {
-        show_menu();
-        scanf("%d", &choice);
+        // Hiển thị menu
+        choice = display_menu();
 
-        if (choice == 0)
-        {
-            printf("\n=========================================\n");
-            printf("  Thanks for using our program! Goodbye! \n");
-            printf("=========================================\n\n");
+        // BƯỚC 4: Xử lý lựa chọn
+        switch (choice) {
+        case 1: // FCFS
+            printf("\n--- Running FCFS Algorithm ---\n");
+            fcfs(processes, n);
+            display_results(processes, n, "FCFS");
             break;
+
+        case 2: // SJF
+            printf("\n--- Running SJF Algorithm ---\n");
+            sjf(processes, n);
+            display_results(processes, n, "SJF (Non-Preemptive)");
+            break;
+
+        case 3: // SRTF
+            printf("\n--- Running SRTF Algorithm ---\n");
+            srtf(processes, n);
+            display_results(processes, n, "SRTF (Preemptive SJF)");
+            break;
+
+        case 4: // Priority NP
+            printf("\n--- Running Priority (Non-Preemptive) Algorithm ---\n");
+            priority_non_preemptive(processes, n);
+            display_results(processes, n, "Priority (Non-Preemptive)");
+            break;
+
+        case 5: // Priority P
+            printf("\n--- Running Priority (Preemptive) Algorithm ---\n");
+            priority_preemptive(processes, n);
+            display_results(processes, n, "Priority (Preemptive)");
+            break;
+
+        case 6: // Round Robin
+            printf("\n--- Running Round Robin Algorithm ---\n");
+            printf("Enter time quantum: ");
+            scanf("%d", &time_quantum);
+
+            if (!validate_time_quantum(time_quantum)) {
+                printf("Invalid time quantum. Using default: %d\n",
+                    DEFAULT_TIME_QUANTUM);
+                time_quantum = DEFAULT_TIME_QUANTUM;
+            }
+
+            round_robin(processes, n, time_quantum);
+            display_results(processes, n, "Round Robin");
+            break;
+
+        case 7: // Compare All
+            printf("\n--- Comparing All Algorithms ---\n");
+            display_comparison(original, n, DEFAULT_TIME_QUANTUM);
+            break;
+
+        case 8: // Exit
+            printf("\nThank you for using CPU Scheduling Simulator!\n");
+            printf("Goodbye!\n");
+            break;
+
+        default:
+            printf("Invalid choice. Please try again.\n");
         }
 
-        if (choice < 0 || choice > 8)
-        {
-            printf("\nError: Invalid choice. Please select 0-8.\n");
-            continue;
+        // Pause để user đọc kết quả
+        if (choice != 8) {
+            wait_for_enter();
         }
 
-        run_scheduling(choice, proc, n);
-
-        printf("\nPress Enter to continue...");
-        getchar();
-        getchar();
-    }
+    } while (choice != 8);
 
     return 0;
 }
