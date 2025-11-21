@@ -1,5 +1,5 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#include "io.h"
+#include "../../include/io.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>

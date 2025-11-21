@@ -1,5 +1,5 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
-#include "io.h"
+#include "../../include/io.h"
 #include <stdio.h>
 
 // In header của bảng
@@ -10,7 +10,7 @@ static void PrintTableHeader(void) {
 
 // In một process
 static void PrintSingleProcess(const Process* P) {
-    printf("%-7s | %7d | %5d | %7d | %10d | %8d\n",
+    printf("%-7d | %7d | %5d | %7d | %10d | %8d\n",
         P->ProcessId, P->ArrivalTime, P->BurstTime,
         P->WaitingTime, P->TurnaroundTime, P->ResponseTime);
 }
