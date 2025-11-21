@@ -31,11 +31,11 @@ MAIN_SRC := $(SRC_DIR)/main.c
 # Algorithms
 ALGORITHMS_STUB_SRC := $(SRC_DIR)/algorithms.c
 RR_SRC := $(ALGORITHMS_DIR)/round_robin.c
+PRIORITY_P_SRC := $(ALGORITHMS_DIR)/priority_p.c
 # FCFS_SRC := $(ALGORITHMS_DIR)/fcfs.c
 # SJF_SRC := $(ALGORITHMS_DIR)/sjf.c
 # SRTF_SRC := $(ALGORITHMS_DIR)/srtf.c
 # PRIORITY_NP_SRC := $(ALGORITHMS_DIR)/priority_np.c
-# PRIORITY_P_SRC := $(ALGORITHMS_DIR)/priority_p.c
 
 # Core
 QUEUE_SRC := $(CORE_DIR)/queue.c
@@ -51,7 +51,8 @@ FILE_HANDLER_SRC := $(SRC_DIR)/file_handler.c
 # UI
 MENU_SRC := $(UI_DIR)/menu.c
 DISPLAY_SRC := $(UI_DIR)/display.c
-# GANTT_SRC := $(UI_DIR)/gantt.c
+GANTT_SRC := $(UI_DIR)/gantt.c
+COMPARISON_SRC := $(UI_DIR)/comparison.c
 
 # Utils
 COLORS_SRC := $(UTILS_DIR)/colors.c
@@ -63,6 +64,7 @@ SRCS := \
     $(MAIN_SRC) \
     $(ALGORITHMS_STUB_SRC) \
     $(RR_SRC) \
+    $(PRIORITY_P_SRC) \
     $(QUEUE_SRC) \
     $(IO_SRC) \
     $(INPUT_SRC) \
@@ -70,6 +72,8 @@ SRCS := \
     $(FILE_HANDLER_SRC) \
     $(MENU_SRC) \
     $(DISPLAY_SRC) \
+    $(GANTT_SRC) \
+    $(COMPARISON_SRC) \
     $(COLORS_SRC)
 
 # ===================================
@@ -79,7 +83,8 @@ MAIN_OBJ := $(BUILD_DIR)/main.o
 
 ALGORITHM_OBJS := \
     $(BUILD_DIR)/algorithms.o \
-    $(BUILD_DIR)/algorithms/round_robin.o
+    $(BUILD_DIR)/algorithms/round_robin.o \
+    $(BUILD_DIR)/algorithms/priority_p.o
 
 CORE_OBJS := \
     $(BUILD_DIR)/core/queue.o
@@ -92,7 +97,9 @@ IO_OBJS := \
 
 UI_OBJS := \
     $(BUILD_DIR)/ui/menu.o \
-    $(BUILD_DIR)/ui/display.o
+    $(BUILD_DIR)/ui/display.o \
+    $(BUILD_DIR)/ui/gantt.o \
+    $(BUILD_DIR)/ui/comparison.o
 
 UTILS_OBJS := \
     $(BUILD_DIR)/utils/colors.o
