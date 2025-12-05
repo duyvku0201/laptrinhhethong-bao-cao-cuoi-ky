@@ -13,31 +13,50 @@
 // ==============================
 typedef struct
 {
-    int ProcessId; // ID tiến trình dạng chuỗi
-    int ArrivalTime;                       // Thời điểm đến
-    int BurstTime;                         // Thời gian xử lý
-    int Priority;                          // Mức độ ưu tiên
-    int RemainingTime;                     // Thời gian còn lại
-    int WaitingTime;                       // Thời gian chờ
-    int TurnaroundTime;                    // Thời gian hoàn thành vòng đời
-    int ResponseTime;                      // Thời gian phản hồi
-    int CompletionTime;                    // Thời điểm hoàn thành
-    int StartTime;                         // Thời điểm bắt đầu chạy
-    bool IsCompleted;                      // Trạng thái hoàn thành (true/false)
-
-    // int pid;            // Mã tiến trình (Process ID - dạng số)
-    // int arrival_time;   // Thời điểm đến hệ thống
-    // int burst_time;     // Thời gian cần CPU
-    // int priority;       // Độ ưu tiên (Priority)
-    // int remaining_time; // Thời gian còn lại để chạy
-
-    // // Thông tin tính toán
-    // int completion_time; // Thời điểm hoàn thành (CT)
-    // int waiting_time;    // Thời gian chờ (WT = TAT - BT)
-    // int turnaround_time; // Thời gian hoàn thành vòng đời (TAT = CT - AT)
-    // int response_time;   // Thời gian đáp ứng (RT = Start - AT)
-    // int start_time;      // Thời điểm bắt đầu chạy
-    // int is_completed;    // 0 = chưa xong, 1 = đã hoàn thành
+    int ProcessId;         // ID tiến trình
+    int ArrivalTime;       // Thời điểm đến
+    int BurstTime;         // Thời gian xử lý
+    int Priority;          // Mức độ ưu tiên
+    int RemainingTime;     // Thời gian còn lại
+    int WaitingTime;       // Thời gian chờ
+    int TurnaroundTime;    // Thời gian hoàn thành vòng đời
+    int ResponseTime;      // Thời gian phản hồi
+    int CompletionTime;    // Thời điểm hoàn thành
+    int StartTime;         // Thời điểm bắt đầu chạy
+    bool IsCompleted;      // Trạng thái hoàn thành
 } Process;
+
+// ==============================
+// Khởi tạo và tạo Process
+// ==============================
+void InitProcess(Process* ProcessData);
+Process CreateProcess(int Id, int Arrival, int Burst, int Priority);
+void ResetProcess(Process* ProcessData);
+void CopyProcess(Process* Destination, const Process* Source);
+
+// ==============================
+// Quản lý trạng thái Process
+// ==============================
+bool IsProcessCompleted(const Process* ProcessData);
+bool HasProcessStarted(const Process* ProcessData);
+void StartProcess(Process* ProcessData, int CurrentTime);
+int ExecuteProcess(Process* ProcessData, int TimeUnits);
+void CompleteProcess(Process* ProcessData, int CurrentTime);
+
+// ==============================
+// So sánh Processes (dùng cho qsort)
+// ==============================
+int CompareProcessByArrival(const void* First, const void* Second);
+int CompareProcessByBurst(const void* First, const void* Second);
+int CompareProcessByRemaining(const void* First, const void* Second);
+int CompareProcessByPriority(const void* First, const void* Second);
+int CompareProcessById(const void* First, const void* Second);
+
+// ==============================
+// Validation và Display
+// ==============================
+bool ValidateProcess(const Process* ProcessData);
+void PrintProcess(const Process* ProcessData);
+void PrintProcessShort(const Process* ProcessData);
 
 #endif // PROCESS_H
