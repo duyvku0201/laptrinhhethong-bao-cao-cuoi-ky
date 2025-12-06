@@ -19,6 +19,7 @@ SAMPLES_DIR := samples
 # Source directories
 ALGORITHMS_DIR := $(SRC_DIR)/algorithms
 CORE_DIR := $(SRC_DIR)/core
+IO_DIR := $(SRC_DIR)/io
 UI_DIR := $(SRC_DIR)/ui
 UTILS_DIR := $(SRC_DIR)/utils
 
@@ -32,21 +33,20 @@ MAIN_SRC := $(SRC_DIR)/main.c
 ALGORITHMS_STUB_SRC := $(SRC_DIR)/algorithms.c
 RR_SRC := $(ALGORITHMS_DIR)/round_robin.c
 PRIORITY_P_SRC := $(ALGORITHMS_DIR)/priority_p.c
-# FCFS_SRC := $(ALGORITHMS_DIR)/fcfs.c
-# SJF_SRC := $(ALGORITHMS_DIR)/sjf.c
-# SRTF_SRC := $(ALGORITHMS_DIR)/srtf.c
-# PRIORITY_NP_SRC := $(ALGORITHMS_DIR)/priority_np.c
+FCFS_SRC := $(ALGORITHMS_DIR)/fcfs.c
+SJF_SRC := $(ALGORITHMS_DIR)/sjf.c
+SRTF_SRC := $(ALGORITHMS_DIR)/srtf.c
+PRIORITY_NP_SRC := $(ALGORITHMS_DIR)/priority_np.c
 
 # Core
 QUEUE_SRC := $(CORE_DIR)/queue.c
-# PROCESS_SRC := $(CORE_DIR)/process.c
-# METRICS_SRC := $(CORE_DIR)/metrics.c
+PROCESS_SRC := $(CORE_DIR)/process.c
+METRICS_SRC := $(CORE_DIR)/metrics.c
 
 # IO
-IO_SRC := $(SRC_DIR)/io.c
-INPUT_SRC := $(SRC_DIR)/input.c
-OUTPUT_SRC := $(SRC_DIR)/output.c
-FILE_HANDLER_SRC := $(SRC_DIR)/file_handler.c
+INPUT_SRC := $(IO_DIR)/input.c
+OUTPUT_SRC := $(IO_DIR)/output.c
+FILE_HANDLER_SRC := $(IO_DIR)/file_handler.c
 
 # UI
 MENU_SRC := $(UI_DIR)/menu.c
@@ -56,8 +56,8 @@ COMPARISON_SRC := $(UI_DIR)/comparison.c
 
 # Utils
 COLORS_SRC := $(UTILS_DIR)/colors.c
-# SORT_SRC := $(UTILS_DIR)/sort.c
-# VALIDATION_SRC := $(UTILS_DIR)/validation.c
+SORT_SRC := $(UTILS_DIR)/sort.c
+VALIDATION_SRC := $(UTILS_DIR)/validation.c
 
 # All source files (only those that exist)
 SRCS := \
@@ -102,7 +102,9 @@ UI_OBJS := \
     $(BUILD_DIR)/ui/comparison.o
 
 UTILS_OBJS := \
-    $(BUILD_DIR)/utils/colors.o
+    $(BUILD_DIR)/utils/colors.o \
+    $(BUILD_DIR)/utils/sort.o \
+    $(BUILD_DIR)/utils/validation.o
 
 # All object files
 OBJS := $(MAIN_OBJ) $(ALGORITHM_OBJS) $(CORE_OBJS) $(IO_OBJS) $(UI_OBJS) $(UTILS_OBJS)
@@ -157,17 +159,18 @@ $(BUILD_DIR)/io.o: $(SRC_DIR)/io.c
 	@echo "Compiling $<..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/input.o: $(SRC_DIR)/input.c
+# Compile io subdirectory
+$(BUILD_DIR)/input.o: $(IO_DIR)/input.c
 	@mkdir -p $(BUILD_DIR)
 	@echo "Compiling $<..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/output.o: $(SRC_DIR)/output.c
+$(BUILD_DIR)/output.o: $(IO_DIR)/output.c
 	@mkdir -p $(BUILD_DIR)
 	@echo "Compiling $<..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/file_handler.o: $(SRC_DIR)/file_handler.c
+$(BUILD_DIR)/file_handler.o: $(IO_DIR)/file_handler.c
 	@mkdir -p $(BUILD_DIR)
 	@echo "Compiling $<..."
 	$(CC) $(CFLAGS) -c $< -o $@

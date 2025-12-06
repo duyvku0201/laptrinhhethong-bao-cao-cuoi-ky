@@ -10,8 +10,8 @@
  * Độ phức tạp: O(n × T) với T = tổng thời gian
  */
 
-#include "../../include/algorithms.h"
-#include "../../include/process.h"
+#include "algorithms.h"
+#include "process.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <limits.h>

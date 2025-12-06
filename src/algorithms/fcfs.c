@@ -8,9 +8,9 @@
 * - Có thể bị ảnh hưởng bởi hiệu ứng convoy, khi một process dài chiếm CPU, các process ngắn hơn phải chờ đợi lâu hơn.
 * Độ phức tạp thời gian: O(n log n) do sorting, do việc sắp xếp các process theo thời gian đến.
 */
-#include "../../include/algorithms.h"
-#include "../../include/utils.h"
-#include "../../include/metrics.h"
+#include "algorithms.h"
+#include "utils.h"
+#include "metrics.h"
 #include <stdio.h>
 #include <stdlib.h>
 /**
@@ -41,19 +41,19 @@ void fcfs(Process processes[], int n) {
 		// BƯỚC 3.1: Kiểm tra CPU có idle không (nếu current_time < arrival_time của process hiện tại)
 		// Nếu process chưa đến, CPU sẽ idle đến khi process đó đến. idle là thời gian CPU không làm gì. (arrival_time > current_time)
 		// -> CPU phải chờ (idle) đến khi process đến. Cập nhật current_time = arrival_time của process hiện tại 
-		if (current_time < processes[i].arrival_time) {
-			current_time = processes[i].arrival_time;
+		if (current_time < processes[i].ArrivalTime) {
+			current_time = processes[i].ArrivalTime;
 		}
 		// BƯỚC 3.2: Ghi nhận thời điểm process bắt đầu chạy. (start_time)
 		// Start time là thời điểm process bắt đầu được CPU phục vụ lần đầu tiên.
-		processes[i].start_time = current_time;
+		processes[i].StartTime = current_time;
 		// BƯỚC 3.3: Process chạy đến hết burst time (non-preemptive)
-		current_time += processes[i].burst_time;
+		current_time += processes[i].BurstTime;
 		// BƯỚC 3.4: Ghi nhận thời điểm process hoàn thành (completion_time)
 		// Completion_time là thời điểm process hoàn thành việc chạy.
-		processes[i].completion_time = current_time;
+		processes[i].CompletionTime = current_time;
 		// BƯỚC 3.5: Đánh dấu process đã hoàn thành
-		processes[i].is_completed = 1;
+		processes[i].IsCompleted = 1;
 	}
 	// BƯỚC 4: Tính các metrics cho từng process (WT,TAT,RT)
 	// Hàm này được implement bởi Thành viên 2

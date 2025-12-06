@@ -6,11 +6,13 @@
  * @brief Main entry point của chương trình
  */
 
-#include "include/process.h"
-#include "include/algorithms.h"
-#include "include/io.h"
-#include "include/display.h"
-#include "include/utils.h"
+ #define DEFAULT_TIME_QUANTUM 2
+
+#include "process.h"
+#include "algorithms.h"
+#include "io.h"
+#include "display.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,7 +35,7 @@ int main() {
     int time_quantum;                  // Time quantum cho RR
 
     // BƯỚC 1: Hiển thị header
-    print_header("CPU SCHEDULING ALGORITHMS SIMULATOR");
+    print_box_header("CPU SCHEDULING ALGORITHMS SIMULATOR");
 
     printf("Welcome to CPU Scheduling Simulator!\n");
     printf("This program implements 6 scheduling algorithms:\n");
@@ -150,7 +152,7 @@ int main() {
 
         // Pause để user đọc kết quả
         if (choice != 8) {
-            wait_for_enter();
+            pause_enter();
         }
 
     } while (choice != 8);

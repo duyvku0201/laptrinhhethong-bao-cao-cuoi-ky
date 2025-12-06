@@ -4,7 +4,7 @@
  * @author Team CPU Scheduling
  */
 
-#include "../../include/process.h"
+#include "process.h"
 #include <stdio.h>
 #include <stdbool.h>
 

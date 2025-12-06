@@ -4,9 +4,9 @@
  * @author Team CPU Scheduling
  */
 
-#include "../../include/display.h"
-#include "../../include/process.h"
-#include "../../include/utils.h"
+#include "display.h"
+#include "process.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 

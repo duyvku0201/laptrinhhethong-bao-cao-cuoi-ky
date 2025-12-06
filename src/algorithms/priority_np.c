@@ -10,10 +10,10 @@
 * Priority: 1 > 2 > 3 > ... (số nhỏ = ưu tiên cao)
 */
 
-#include "../../include/algorithms.h"
-#include "../../include/utils.h"
-#include "../../include/metrics.h"
-#include <stdio.h>
+#include "algorithms.h"
+#include "utils.h"
+#include "metrics.h"
+#include <stdio.h>>
 /**
 * @brief Hàm thực hiện thuật toán Priority Scheduling (Non-Preemptive) algorithm
 * THUẬT TOÁN:
@@ -51,15 +51,15 @@ void priority_non_preemptive(Process processes[], int n) {
 		//BƯỚC 3: Duyệt qua tất cả process để tìm process có priority cao nhất đã đến và chưa hoàn thành
 		for (int i = 0; i < n; i++) {
 			// Kiểm tra process đã đến và chưa hoàn thành
-			if (processes[i].arrival_time <= current_time && !is_completed[i]) {
+			if (processes[i].ArrivalTime <= current_time && !is_completed[i]) {
 				// So sánh priority (số nhỏ hơn = ưu tiên cao hơn)
-				if (processes[i].priority < highest_priority) {
-					highest_priority = processes[i].priority;
+				if (processes[i].Priority < highest_priority) {
+					highest_priority = processes[i].Priority;
 					idx = i;
 				}
 				// Nếu priority bằng nhau, chọn process đến trước (FCFS) (chọn AT nhỏ hơn)
-				else if (processes[i].priority == highest_priority) {
-					if (processes[i].arrival_time < processes[idx].arrival_time) {
+				else if (processes[i].Priority == highest_priority) {
+					if (processes[i].ArrivalTime < processes[idx].ArrivalTime) {
 						idx = i;
 					}
 				}
@@ -69,13 +69,13 @@ void priority_non_preemptive(Process processes[], int n) {
 		if (idx != -1) {
 			// Tìm được process
 			// Ghi nhận start time
-			processes[idx].start_time = current_time;
+			processes[idx].StartTime = current_time;
 			// Process chạy hết burst time
-			current_time += processes[idx].burst_time;
+			current_time += processes[idx].BurstTime;
 			// Ghi nhận completion time
-			processes[idx].completion_time = current_time;
+			processes[idx].CompletionTime = current_time;
 			// Đánh dấu process đã hoàn thành
-			processes[idx].is_completed = 1;
+			processes[idx].IsCompleted = 1;
 			is_completed[idx] = 1;
 			completed++;
 		}

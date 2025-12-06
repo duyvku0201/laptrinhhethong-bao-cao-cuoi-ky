@@ -4,8 +4,8 @@
  * @author Team CPU Scheduling
  */
 
-#include "../../include/process.h"
-#include "../../include/utils.h"
+#include "process.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

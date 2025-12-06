@@ -7,11 +7,11 @@
 
 #include <stdio.h>
 
-#include "./../include/process.h"
-#include "./../include/algorithms.h"
-#include "./../include/display.h"
-#include "./../include/io.h"
-#include "./../include/utils.h"
+#include "process.h"
+#include "algorithms.h"
+#include "display.h"
+#include "io.h"
+#include "utils.h"
  /**
   * @brief Hiển thị main menu và nhận input
   * @return Choice của user (1-8)
@@ -20,9 +20,9 @@ int display_menu(void) {
     int choice;
 
     printf("\n");
-    print_separator(60, '=');
+    print_separator();
     printf("           CPU SCHEDULING ALGORITHMS MENU\n");
-    print_separator(60, '=');
+    print_separator();
 
     printf("\n");
     printf("  1. FCFS (First Come First Serve)\n");
@@ -34,7 +34,7 @@ int display_menu(void) {
     printf("  7. Compare All Algorithms\n");
     printf("  8. Exit\n");
     printf("\n");
-    print_separator(60, '-');
+    print_separator();
 
     printf("Enter your choice [1-8]: ");
     scanf("%d", &choice);
