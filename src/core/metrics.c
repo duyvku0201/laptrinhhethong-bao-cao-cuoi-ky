@@ -1,4 +1,4 @@
-﻿#include "../../include/metrics.h"
+﻿#include "metrics.h"
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -113,7 +113,7 @@ float CalculateCpuUtilization(Process* Processes, int ProcessCount, int TotalTim
         TotalBurstTime += Processes[Index].BurstTime;
     }
 
-    return ((float)TotalBurstTime / TotalTime) * 100. 0f;
+    return ((float)TotalBurstTime / TotalTime) * 100.0f;
 }
 
 // Tính Throughput

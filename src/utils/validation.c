@@ -8,7 +8,8 @@
 * - Copy: Sao chép dữ liệu giữa các cấu trúc dữ liệu processes
 * - Find: Tìm kiếm các phần tử trong cấu trúc dữ liệu processes
 */
-#include "../../include/utils.h"
+#include "process.h"
+#include "utils.h"
 #include <stdio.h>
 /**
 * @ brief Kiểm tra tính hợp lệ của một số nguyên dương input.
@@ -32,23 +33,23 @@ int validate_input(Process processes[], int n) {
 	// Kiểm tra từng process
 	for (int i = 0; i < n; i++) {
 		// Kiểm tra PID (phải là số nguyên dương)
-		if (processes[i].pid <= 0) {
+		if (processes[i].ProcessId <= 0) {
 			printf("Lỗi: PID của process thứ %d phải là số nguyên dương.\n", i + 1);
 			return 0; // Không hợp lệ
 		}
 		// Kiểm tra Arrival Time (không được âm)
-		if (processes[i].arrival_time < 0) {
-			printf("Lỗi: Arrival time của process P thứ %d không được âm.\n", processes[i].pid);
+		if (processes[i].ArrivalTime < 0) {
+			printf("Lỗi: Arrival time của process P thứ %d không được âm.\n", processes[i].ProcessId);
 			return 0; // Không hợp lệ
 		}
 		// Kiểm tra Burst Time (phải dương > 0)
-		if (processes[i].burst_time <= 0) {
-			printf("Lỗi: Burst time của process P thứ %d phải là số dương.\n", processes[i].pid);
+		if (processes[i].BurstTime <= 0) {
+			printf("Lỗi: Burst time của process P thứ %d phải là số dương.\n", processes[i].ProcessId);
 			return 0; // Không hợp lệ
 		}
 		// Kiểm tra Priority (Không được âm)
-		if (processes[i].priority < 0) {
-			printf("Lỗi: Priority của process P thứ %d không được âm.\n", processes[i].pid);
+		if (processes[i].Priority < 0) {
+			printf("Lỗi: Priority của process P thứ %d không được âm.\n", processes[i].ProcessId);
 			return 0; // Không hợp lệ
 		}
 	}
@@ -73,8 +74,8 @@ int check_duplicate_pids(Process processes[], int n) {
 		// Vòng lặp trong: so sánh process i với các process j phía sau nó
 		for (int j = i + 1; j < n; j++) {
 			// Nếu PID của hai process trùng/giống nhau, trả về 1 (có trùng lặp)
-			if (processes[i].pid == processes[j].pid) {
-				printf("Lỗi: PID trùng lặp %d giữa process thứ %d và process thứ %d.\n", processes[i].pid);
+			if (processes[i].ProcessId == processes[j].ProcessId) {
+				printf("Lỗi: PID trùng lặp %d giữa process thứ %d và process thứ %d.\n", processes[i].ProcessId);
 				return 1; // Có PID trùng lặp
 			}
 		}
@@ -103,7 +104,7 @@ int validate_time_quantum(int time_quantum) {
 	}
 	// Cảnh báo nếu TQ = 1
 	if (time_quantum == 1) {
-		printf("Cảnh báo: Time quantum = 1 có thể gây ra chi phí chuyển đổi ngữ cảnh cao")
+		printf("Cảnh báo: Time quantum = 1 có thể gây ra chi phí chuyển đổi ngữ cảnh cao");
 
 	}
 	return 1; // Hơp lệ 
@@ -136,13 +137,13 @@ void copy_processes(Process dest[], Process src[], int n) {
 * - Các metrics = 0
 */
 void init_process(Process* p) {
-	p->remaining_time = p->burst_time; // Thời gian còn lại ban đầu bằng burst time (Thời gian còn lại = thời gian cần chạy)
-	p->start_time = -1; // -1 nghĩa là chưa bắt đầu chạy
-	p->is_completed = 0; // 0 = chưa hoàn thành, 1 = đã hoàn thành
-	p->completion_time = 0;
-	p->waiting_time = 0;
-	p->turnaround_time = 0;
-	p->response_time = 0;
+	p->RemainingTime = p->BurstTime; // Thời gian còn lại ban đầu bằng burst time (Thời gian còn lại = thời gian cần chạy)
+	p->StartTime = -1; // -1 nghĩa là chưa bắt đầu chạy
+	p->IsCompleted = 0; // 0 = chưa hoàn thành, 1 = đã hoàn thành
+	p->CompletionTime = 0;
+	p->WaitingTime = 0;
+	p->TurnaroundTime = 0;
+	p->ResponseTime = 0;
 }
 
 /**
@@ -164,13 +165,13 @@ void init_processes(Process processes[], int n) {
 */
 void reset_process(Process* p) {
 	// *p là dereference con trỏ p để truy cập vào cấu trúc Process mà p trỏ tới
-	p->remaining_time = p->burst_time; // Reset thời gian còn lại về burst_time (Chưa chạy)
-	p->start_time = -1; // Chưa bắt đầu chạy
-	p->is_completed = 0; // Chưa hoàn thành
-	p->completion_time = 0; // Reset completion time
-	p->waiting_time = 0; // Reset waiting time
-	p->turnaround_time = 0; // Reset turnaroung time
-	p->response_time = 0; // Reset response time
+	p->RemainingTime = p->BurstTime; // Reset thời gian còn lại về burst_time (Chưa chạy)
+	p->StartTime = -1; // Chưa bắt đầu chạy
+	p->IsCompleted = 0; // Chưa hoàn thành
+	p->CompletionTime = 0; // Reset completion time
+	p->WaitingTime = 0; // Reset waiting time
+	p->TurnaroundTime = 0; // Reset turnaround time
+	p->ResponseTime = 0; // Reset response time
 }
 /**
 * @brief Reset mảng processes để chạy lại thuật toán từ đầu.
@@ -195,7 +196,7 @@ void reset_processes(Process processes[], int n) {
 */
 int find_process_by_pid(Process processes[], int n, int pid) {
 	for (int i = 0; i < n; i++) {
-		if (processes[i].pid == pid) {
+		if (processes[i].ProcessId == pid) {
 			return i; // Trả về chỉ số index nếu tìm thấy PID
 		}
 	}

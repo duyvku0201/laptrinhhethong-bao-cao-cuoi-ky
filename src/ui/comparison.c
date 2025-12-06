@@ -4,10 +4,10 @@
  * @author Team CPU Scheduling
  */
 
-#include "../../include/display.h"
-#include "../../include/process.h"
-#include "../../include/algorithms.h"
-#include "../../include/utils.h"
+#include "display.h"
+#include "process.h"
+#include "algorithms.h"
+#include "utils.h"
 #include <stdio.h>
 #include <string.h>
 

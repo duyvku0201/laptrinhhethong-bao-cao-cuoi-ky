@@ -2,13 +2,14 @@
 * @ file sort.c
 * @ brief Các hàm sắp xếp processes
 * File này chứa các hàm để sắp xếp mảng processes theo các tiêu chí khác nhau:
-* - Sắp xếp theo thời gian đến (arrival time)
-* - Sắp xếp theo thời gian thực thi (burst time)
-* - Sắp xếp theo thời gian hoàn thành (Completion time)
-* - Sắp xếp theo độ ưu tiên (priority)
-* - Sắp xếp theo PID (Process ID)
+* - Sắp xếp theo thời gian đến (ArrivalTime)
+* - Sắp xếp theo thời gian thực thi (BurstTime)
+* - Sắp xếp theo thời gian hoàn thành (CompletionTime)
+* - Sắp xếp theo độ ưu tiên (Priority)
+* - Sắp xếp theo PID (ProcessId)
 */
-#include "../../include/utils.h"
+#include "process.h"
+#include "utils.h"
 #include <stdio.h>
 /**
 * @ brief Hàm sắp xếp mảng processes theo thời gian đến tăng dần (arrival time)
@@ -28,7 +29,7 @@ void sort_by_arrival(Process processes[], int n) {
 		// Mỗi lần lặp, phần tử lớn nhất "nổi" lên cuối mảng chưa sắp xếp
 		for (int j = 0; j < n - i - 1; j++) {
 			// So sánh arrival_time của 2 processes liền kề
-			if (processes[j].arrival_time > processes[j + 1].arrival_time) {
+			if (processes[j].ArrivalTime > processes[j + 1].ArrivalTime) {
 				// Hoán đổi nếu không đúng thứ tự ( Nếu process j đến sau process j+1 -> Swap
 				Process temp = processes[j]; // Lưu process j vào biến tạm
 				processes[j] = processes[j + 1]; // Gán process j+1 vào vị trí j
@@ -56,18 +57,18 @@ void sort_by_burst(Process processes[], int n) {
 		//Vòng lặp trong: so sánh và đẩy phần tử lớn nhất về cuối
 		for (int j = 0; j < n - i - 1; j++) {
 			// Điều kiện 1: So sánh burst_time của 2 processes liền kề
-			if (processes[j].burst_time > processes[j + 1].burst_time) {
+			if (processes[j].BurstTime > processes[j + 1].BurstTime) {
 				// Hoán đổi nếu không đúng thứ tự. Process j có burst_time lớn hơn process j+1 -> Swap
-				process temp = processes[j]; // Lưu process j vào biến tạm
+				Process temp = processes[j]; // Lưu process j vào biến tạm
 				processes[j] = processes[j + 1]; // Gán process j+1 vào vị trí j
 				processes[j + 1] = temp; // Gán biến tạm (process j) (đã lưu) vào vị trí j+1
 
 			}
 
 			// Điều kiện 2: Nếu burst_time bằng nhau, so sánh arrival_time
-			else if (processes[j].burst_time == processes[j + 1].burst_time) {
+			else if (processes[j].BurstTime == processes[j + 1].BurstTime) {
 				// Sắp xếp theo arrival_time (FCFS - First Come First Serve)
-				if (processes[j].arrival_time > processes[j + 1].arrival_time) {
+				if (processes[j].ArrivalTime > processes[j + 1].ArrivalTime) {
 					Process temp = processes[j]; //Lưu process j vào biến tạm
 					processes[j] = processes[j + 1]; // Gán process j+1 vào vị trí j
 					processes[j + 1] = temp; // Gán biến tạm (process j) (đã lưu) vào vị trí j+1
@@ -94,15 +95,15 @@ void sort_by_priority(Process processes[], int n) {
 		//Vòng lặp trong: so sánh và đẩy phần tử lớn nhất về cuối
 		for (int j = 0; j < n - i - 1; j++) {
 			// So sánh priority (số nhỏ = ưu tiên cao)
-			if (processes[j].priority > processes[j + 1].priority) {
+			if (processes[j].Priority > processes[j + 1].Priority) {
 				// Hoán đổi nếu không đúng thứ tự. Process j có priority lớn hơn process j+1 -> Swap
 				Process temp = processes[j]; //Lưu process j vào biến tạm
 				processes[j] = processes[j + 1]; // Gán process j+1 vào vị trí j
 				processes[j + 1] = temp; // Gán biến tạm (process j) (đã lưu) vào vị trí j+1
 			}
 			// Nếu priority bằng nhau, sắp xếp theo arrival_time (FCFS)
-			else if (processes[j].priority == processes[j + 1].priority) {
-				if (processes[j].arrival_time > processes[j + 1].arrival_time) {
+			else if (processes[j].Priority == processes[j + 1].Priority) {
+				if (processes[j].ArrivalTime > processes[j + 1].ArrivalTime) {
 					Process temp = processes[j]; //Lưu process j vào biến tạm
 					processes[j] = processes[j + 1]; // Gán process j+1 vào vị trí j
 					processes[j + 1] = temp; // Gán biến tạm (process j) (đã lưu) vào vị trí j+1
@@ -123,7 +124,7 @@ void sort_by_completion(Process processes[], int n) {
 		//Vòng lặp trong: so sánh và đẩy phần tử lớn nhất về cuối
 		//So sánh completion time của 2 processes liền kề 
 		for (int j = 0; j < n - i - 1; j++) {
-			if (processes[j].completion_time > processes[j + 1].completion_time) {
+			if (processes[j].CompletionTime > processes[j + 1].CompletionTime) {
 				// Hoán đổi nếu không đúng thứ tự. Process j có completion_time lớn hơn process j+1 -> Swap
 				Process temp = processes[j]; //Lưu process j vào biến tạm
 				processes[j] = processes[j + 1]; // Gán process j+1 vào vị trí j
@@ -147,7 +148,7 @@ void sort_by_pid(Process processes[], int n) {
 		//Vòng lặp trong: so sánh và đẩy phần tử lớn nhất về cuối
 		for (int j = 0; j < n - i - 1; j++) {
 		 // So sánh PID của 2 processes liền kề
-			if (processes[j].pid > processes[j + 1].pid) {
+			if (processes[j].ProcessId > processes[j + 1].ProcessId) {
 				// Hoán đổi nếu không đúng thứ tự ( Process j có PID lớn hơn process j+1 -> Swap)
 				Process temp = processes[j]; //Lưu process j vào biến tạm
 				processes[j] = processes[j + 1]; // Gán process j+1 vào vị trí j

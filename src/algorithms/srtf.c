@@ -1,5 +1,5 @@
-﻿#include "../../include/algorithms.h"
-#include "../../include/process.h"
+﻿#include "algorithms.h"
+#include "process.h"
 #include <stdio.h>
 #include <limits.h>
 #include <stdbool.h>

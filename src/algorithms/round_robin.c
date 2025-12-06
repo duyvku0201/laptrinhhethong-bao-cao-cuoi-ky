@@ -10,9 +10,9 @@
  * Độ phức tạp: O(n × T / TQ) với T = tổng thời gian, TQ = time quantum
  */
 
-#include "../../include/algorithms.h"
-#include "../../include/process.h"
-#include "../../include/queue.h"
+#include "algorithms.h"
+#include "process.h"
+#include "queue.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
