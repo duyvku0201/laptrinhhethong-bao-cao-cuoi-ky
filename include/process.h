@@ -7,6 +7,7 @@
 
 #define MAX_PROCESSES 100
 #define MAX_PROCESS_ID_LENGTH 20
+#define DEFAULT_TIME_QUANTUM 2
 
 // ==============================
 // Cấu trúc lưu thông tin process
