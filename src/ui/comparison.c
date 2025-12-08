@@ -115,39 +115,6 @@ void display_comparison(Process original[], int n, int time_quantum) {
     // Run all algorithms and display their individual results
     printf("Running all algorithms...\n\n");
     
-    // Helper function to print process table
-    void print_process_table(Process p[], int n, const char* algo_name) {
-        printf("\n%s=== %s ===%s\n", ANSI_CYAN, algo_name, ANSI_RESET);
-        printf("%-8s%-8s%-8s%-8s%-8s%-8s%-8s%-8s\n", 
-               "PID", "AT", "BT", "Pri", "CT", "TAT", "WT", "RT");
-        for (int i = 0; i < n; i++) {
-            printf("%-8d%-8d%-8d%-8d%-8d%-8d%-8d%-8d\n",
-                   p[i].ProcessId,
-                   p[i].ArrivalTime,
-                   p[i].BurstTime,
-                   p[i].Priority,
-                   p[i].CompletionTime,
-                   p[i].TurnaroundTime,
-                   p[i].WaitingTime,
-                   p[i].ResponseTime);
-        }
-        
-        // Calculate and print averages
-        double sum_tat = 0, sum_wt = 0, sum_rt = 0;
-        int count_rt = 0;
-        for (int i = 0; i < n; i++) {
-            sum_tat += p[i].TurnaroundTime;
-            sum_wt += p[i].WaitingTime;
-            if (p[i].ResponseTime >= 0) {
-                sum_rt += p[i].ResponseTime;
-                count_rt++;
-            }
-        }
-        printf("\nAverage Turnaround Time: %.2f\n", sum_tat / n);
-        printf("Average Waiting Time: %.2f\n", sum_wt / n);
-        printf("Average Response Time: %.2f\n\n", count_rt > 0 ? sum_rt / count_rt : 0.0);
-    }
-    
     // 1. FCFS
     copy_processes(processes[0], original, n);
     fcfs(processes[0], n);
