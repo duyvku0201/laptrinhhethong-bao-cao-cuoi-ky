@@ -22,15 +22,6 @@ typedef struct {
 } AlgorithmMetrics;
 
 /**
- * @brief Copy process array để test các thuật toán khác nhau
- */
-static void copy_processes(Process dest[], const Process src[], int n) {
-    for (int i = 0; i < n; i++) {
-        dest[i] = src[i];
-    }
-}
-
-/**
  * @brief Tính metrics từ process array
  */
 static void calculate_metrics(Process p[], int n, AlgorithmMetrics *metrics) {

@@ -14,6 +14,10 @@ bool ReadProcessesFromConsole(Process *Processes, int *ProcessCount);
 // Đọc processes từ file
 bool LoadProcessesFromFile(const char *Filename, Process *Processes, int *ProcessCount);
 
+// Wrapper functions for main.c
+int read_from_file(const char *filename, Process p[], int *n);
+int read_from_keyboard(Process p[], int *n);
+
 // Ghi kết quả vào file
 bool SaveResultsToFile(const char *Filename, const char *AlgorithmName,
                        Process *Processes, int ProcessCount,

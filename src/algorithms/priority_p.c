@@ -52,7 +52,6 @@ void priority_preemptive(Process processes[], int n) {
     
     int current_time = 0;
     int completed = 0;
-    int last_process = -1; // Để track context switches
     
     // Main scheduling loop
     while (completed < n) {
@@ -124,8 +123,6 @@ void priority_preemptive(Process processes[], int n) {
                 processes[highest_priority_idx].BurstTime;
             completed++;
         }
-        
-        last_process = highest_priority_idx;
     }
     
     // In kết quả (có thể comment nếu không cần)

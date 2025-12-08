@@ -121,7 +121,7 @@ static bool ReadSingleProcess(Process* ProcessData, int Index) {
 
     if (!ValidateProcessData(ProcessData)) return false;
 
-    printf("Process %s added successfully\n", ProcessData->ProcessId);
+    printf("Process %d added successfully\n", ProcessData->ProcessId);
     return true;
 }
 

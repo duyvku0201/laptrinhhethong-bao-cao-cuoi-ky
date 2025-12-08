@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "process.h"
 
 // ANSI color helpers (safe to use on most terminals)
 #define ANSI_RESET   "\x1b[0m"
@@ -20,7 +21,9 @@
 static inline int min_int(int a, int b) { return a < b ? a : b; }
 static inline int max_int(int a, int b) { return a > b ? a : b; }
 static inline int clamp_int(int v, int lo, int hi) {
-    if (v < lo) return lo; if (v > hi) return hi; return v;
+    if (v < lo) return lo;
+    if (v > hi) return hi;
+    return v;
 }
 static inline void swap_int(int *a, int *b) {
     int t = *a; *a = *b; *b = t;
@@ -37,5 +40,12 @@ static inline void pause_enter(void) {
     fflush(stdout);
     int c; while ((c = getchar()) != '\n' && c != EOF) {}
 }
+
+// Validation utilities
+int validate_time_quantum(int time_quantum);
+int check_duplicate_pids(Process processes[], int n);
+
+// Process utilities
+void copy_processes(Process dest[], const Process src[], int n);
 
 #endif // UTILS_H

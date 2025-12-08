@@ -12,6 +12,7 @@
 #include "algorithms.h"
 #include "io.h"
 #include "display.h"
+#include "menu.h"
 #include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>

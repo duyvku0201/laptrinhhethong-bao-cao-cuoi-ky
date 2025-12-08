@@ -75,7 +75,7 @@ int check_duplicate_pids(Process processes[], int n) {
 		for (int j = i + 1; j < n; j++) {
 			// Nếu PID của hai process trùng/giống nhau, trả về 1 (có trùng lặp)
 			if (processes[i].ProcessId == processes[j].ProcessId) {
-				printf("Lỗi: PID trùng lặp %d giữa process thứ %d và process thứ %d.\n", processes[i].ProcessId);
+				printf("Lỗi: PID trùng lặp %d giữa process thứ %d và process thứ %d.\n", processes[i].ProcessId, i + 1, j + 1);
 				return 1; // Có PID trùng lặp
 			}
 		}
@@ -121,7 +121,7 @@ int validate_time_quantum(int time_quantum) {
 * copy_processes(copy, original, 5); // Copy từ original sang copy
 * fcfs(copy, 5); //Chạy thuật toán trên copy, original không đổi
 */
-void copy_processes(Process dest[], Process src[], int n) {
+void copy_processes(Process dest[], const Process src[], int n) {
 	for (int i = 0; i < n; i++) {
 		dest[i] = src[i]; //Copy từng process
 
