@@ -152,33 +152,4 @@ void round_robin(Process processes[], int n, int time_quantum) {
             enqueue(&ready_queue, current_process);
         }
     }
-    
-    // In kết quả (có thể comment lại nếu không cần)
-    printf("\n=== Round Robin (Time Quantum = %d) ===\n", time_quantum);
-    printf("PID\tAT\tBT\tCT\tTAT\tWT\tRT\n");
-    for (int i = 0; i < n; i++) {
-        printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
-               processes[i].ProcessId,
-               processes[i].ArrivalTime,
-               processes[i].BurstTime,
-               processes[i].CompletionTime,
-               processes[i].TurnaroundTime,
-               processes[i].WaitingTime,
-               processes[i].ResponseTime);
-    }
-    
-    // Tính trung bình
-    float avg_tat = 0, avg_wt = 0, avg_rt = 0;
-    for (int i = 0; i < n; i++) {
-        avg_tat += processes[i].TurnaroundTime;
-        avg_wt += processes[i].WaitingTime;
-        avg_rt += processes[i].ResponseTime;
-    }
-    avg_tat /= n;
-    avg_wt /= n;
-    avg_rt /= n;
-    
-    printf("\nAverage Turnaround Time: %.2f\n", avg_tat);
-    printf("Average Waiting Time: %.2f\n", avg_wt);
-    printf("Average Response Time: %.2f\n", avg_rt);
 }

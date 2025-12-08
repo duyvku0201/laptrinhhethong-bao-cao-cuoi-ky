@@ -48,4 +48,9 @@ int check_duplicate_pids(Process processes[], int n);
 // Process utilities
 void copy_processes(Process dest[], const Process src[], int n);
 
+// Sorting utilities
+void sort_by_arrival(Process processes[], int n);
+void sort_by_burst(Process processes[], int n);
+void sort_by_priority(Process processes[], int n);
+
 #endif // UTILS_H

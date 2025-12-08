@@ -1,84 +1,49 @@
-﻿#include "algorithms.h"
-#include "process.h"
-#include <stdio.h>
+﻿/**
+ * @file sjf.c
+ * @brief SJF (Shortest Job First) Scheduling Algorithm
+ * Non-preemptive: Chọn process có burst time nhỏ nhất
+ */
+#include "algorithms.h"
+#include "metrics.h"
 #include <limits.h>
-#include <stdbool.h>
 
+void sjf(Process processes[], int n) {
+    int current_time = 0;
+    int completed = 0;
 
-void sjf(Process Processes[], int ProcessCount) {
-    int CurrentTime = 0;
-    int CompletedCount = 0;
-    int MinBurstTime;
-    int ShortestIndex = -1;
-    bool HasProcess;
-
-    // Khởi tạo các giá trị ban đầu cho từng tiến trình
-    for (int i = 0; i < ProcessCount; i++) {
-        Processes[i].RemainingTime = Processes[i].BurstTime;
-        Processes[i].IsCompleted = false;
-        Processes[i].StartTime = -1;
-        Processes[i].WaitingTime = 0;
-        Processes[i].TurnaroundTime = 0;
-        Processes[i].ResponseTime = -1;
-        Processes[i].CompletionTime = 0;
+    // Khởi tạo
+    for (int i = 0; i < n; i++) {
+        processes[i].IsCompleted = false;
+        processes[i].StartTime = -1;
     }
 
-    // Vòng lặp chính: tiếp tục cho đến khi tất cả tiến trình hoàn thành
-    while (CompletedCount != ProcessCount) {
-        MinBurstTime = INT_MAX;
-        ShortestIndex = -1;
-        HasProcess = false;
+    while (completed < n) {
+        int shortest_idx = -1;
+        int min_burst = INT_MAX;
 
-        // Tìm tiến trình có Burst Time nhỏ nhất trong các tiến trình đã đến và chưa hoàn thành
-        for (int i = 0; i < ProcessCount; i++) {
-            if (Processes[i].ArrivalTime <= CurrentTime &&
-                !Processes[i].IsCompleted) {
-
-                // Nếu tìm thấy tiến trình có Burst Time nhỏ hơn
-                if (Processes[i].BurstTime < MinBurstTime) {
-                    MinBurstTime = Processes[i].BurstTime;
-                    ShortestIndex = i;
-                    HasProcess = true;
-                }
-                // Nếu Burst Time bằng nhau, chọn tiến trình đến trước (FCFS)
-                else if (Processes[i].BurstTime == MinBurstTime) {
-                    if (ShortestIndex == -1 ||
-                        Processes[i].ArrivalTime < Processes[ShortestIndex].ArrivalTime) {
-                        ShortestIndex = i;
-                        HasProcess = true;
-                    }
+        // Tìm process có burst time nhỏ nhất đã đến
+        for (int i = 0; i < n; i++) {
+            if (processes[i].ArrivalTime <= current_time && !processes[i].IsCompleted) {
+                if (processes[i].BurstTime < min_burst ||
+                    (processes[i].BurstTime == min_burst && 
+                     processes[i].ArrivalTime < processes[shortest_idx].ArrivalTime)) {
+                    min_burst = processes[i].BurstTime;
+                    shortest_idx = i;
                 }
             }
         }
 
-        // Nếu không có tiến trình nào sẵn sàng, nhảy đến thời điểm tiến trình tiếp theo đến
-        if (!HasProcess) {
-            CurrentTime++;
+        if (shortest_idx == -1) {
+            current_time++;
             continue;
         }
 
-        // Ghi nhận thời điểm bắt đầu (Start Time) và tính Response Time
-        Processes[ShortestIndex].StartTime = CurrentTime;
-        Processes[ShortestIndex].ResponseTime = CurrentTime - Processes[ShortestIndex].ArrivalTime;
-
-        // Thực thi tiến trình hoàn toàn (non-preemptive - không ngắt)
-        CurrentTime += Processes[ShortestIndex].BurstTime;
-
-        // Đánh dấu tiến trình đã hoàn thành
-        Processes[ShortestIndex].CompletionTime = CurrentTime;
-        Processes[ShortestIndex].IsCompleted = true;
-        Processes[ShortestIndex].RemainingTime = 0;
-
-        // Tính toán Turnaround Time và Waiting Time
-        Processes[ShortestIndex].TurnaroundTime =
-            Processes[ShortestIndex].CompletionTime - Processes[ShortestIndex].ArrivalTime;
-        Processes[ShortestIndex].WaitingTime =
-            Processes[ShortestIndex].TurnaroundTime - Processes[ShortestIndex].BurstTime;
-
-        // Tăng số lượng tiến trình đã hoàn thành
-        CompletedCount++;
+        processes[shortest_idx].StartTime = current_time;
+        current_time += processes[shortest_idx].BurstTime;
+        processes[shortest_idx].CompletionTime = current_time;
+        processes[shortest_idx].IsCompleted = true;
+        completed++;
     }
 
-    // Hàm chỉ tính toán, không hiển thị
-    // Kết quả được lưu trong mảng Processes và sẽ được hiển thị bởi output.c
+    CalculateAllMetrics(processes, n);
 }

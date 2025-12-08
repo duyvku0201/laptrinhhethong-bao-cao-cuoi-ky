@@ -1,17 +1,12 @@
-#define _CRT_SECURE_NO_WARNINGS
-#pragma once
 #ifndef PROCESS_H
 #define PROCESS_H
 
 #include <stdbool.h>
 
 #define MAX_PROCESSES 100
-#define MAX_PROCESS_ID_LENGTH 20
 #define DEFAULT_TIME_QUANTUM 2
 
-// ==============================
-// Cấu trúc lưu thông tin process
-// ==============================
+// Cấu trúc Process
 typedef struct
 {
     int ProcessId;         // ID tiến trình

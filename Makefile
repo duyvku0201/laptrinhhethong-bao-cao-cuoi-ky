@@ -30,7 +30,6 @@ UTILS_DIR := $(SRC_DIR)/utils
 MAIN_SRC := $(SRC_DIR)/main.c
 
 # Algorithms
-ALGORITHMS_STUB_SRC := $(SRC_DIR)/algorithms.c
 RR_SRC := $(ALGORITHMS_DIR)/round_robin.c
 PRIORITY_P_SRC := $(ALGORITHMS_DIR)/priority_p.c
 FCFS_SRC := $(ALGORITHMS_DIR)/fcfs.c
@@ -62,10 +61,15 @@ VALIDATION_SRC := $(UTILS_DIR)/validation.c
 # All source files (only those that exist)
 SRCS := \
     $(MAIN_SRC) \
-    $(ALGORITHMS_STUB_SRC) \
     $(RR_SRC) \
     $(PRIORITY_P_SRC) \
+    $(FCFS_SRC) \
+    $(SJF_SRC) \
+    $(SRTF_SRC) \
+    $(PRIORITY_NP_SRC) \
     $(QUEUE_SRC) \
+    $(PROCESS_SRC) \
+    $(METRICS_SRC) \
     $(IO_SRC) \
     $(INPUT_SRC) \
     $(OUTPUT_SRC) \
@@ -74,20 +78,25 @@ SRCS := \
     $(DISPLAY_SRC) \
     $(GANTT_SRC) \
     $(COMPARISON_SRC) \
-    $(COLORS_SRC)
+    $(COLORS_SRC) \
+    $(SORT_SRC) \
+    $(VALIDATION_SRC)
 
 # ===================================
 # Object Files
 # ===================================
-MAIN_OBJ := $(BUILD_DIR)/main.o
-
 ALGORITHM_OBJS := \
-    $(BUILD_DIR)/algorithms.o \
     $(BUILD_DIR)/algorithms/round_robin.o \
-    $(BUILD_DIR)/algorithms/priority_p.o
+    $(BUILD_DIR)/algorithms/priority_p.o \
+    $(BUILD_DIR)/algorithms/fcfs.o \
+    $(BUILD_DIR)/algorithms/sjf.o \
+    $(BUILD_DIR)/algorithms/srtf.o \
+    $(BUILD_DIR)/algorithms/priority_np.o
 
 CORE_OBJS := \
-    $(BUILD_DIR)/core/queue.o
+    $(BUILD_DIR)/core/queue.o \
+    $(BUILD_DIR)/core/process.o \
+    $(BUILD_DIR)/core/metrics.o
 
 IO_OBJS := \
     $(BUILD_DIR)/io.o \
@@ -107,7 +116,7 @@ UTILS_OBJS := \
     $(BUILD_DIR)/utils/validation.o
 
 # All object files
-OBJS := $(MAIN_OBJ) $(ALGORITHM_OBJS) $(CORE_OBJS) $(IO_OBJS) $(UI_OBJS) $(UTILS_OBJS)
+OBJS := $(BUILD_DIR)/main.o $(ALGORITHM_OBJS) $(CORE_OBJS) $(IO_OBJS) $(UI_OBJS) $(UTILS_OBJS)
 
 # ===================================
 # Target
@@ -132,13 +141,7 @@ $(TARGET): $(OBJS)
 # Compile main
 $(BUILD_DIR)/main.o: $(SRC_DIR)/main.c
 	@mkdir -p $(BUILD_DIR)
-	@echo "Compiling $<..."
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# Compile algorithms stub
-$(BUILD_DIR)/algorithms.o: $(SRC_DIR)/algorithms.c
-	@mkdir -p $(BUILD_DIR)
-	@echo "Compiling $<..."
+# Compile algorithms subdirectory
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Compile algorithms subdirectory
