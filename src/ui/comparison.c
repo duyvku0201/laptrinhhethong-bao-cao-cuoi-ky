@@ -52,40 +52,7 @@ static void calculate_metrics(Process p[], int n, AlgorithmMetrics *metrics) {
     metrics->throughput = max_ct > 0 ? (double)n / max_ct : 0.0;
 }
 
-/**
- * @brief Helper function to print process table
- */
-static void print_process_table(Process p[], int n, const char* algo_name) {
-    printf("\n%s=== %s ===%s\n", ANSI_CYAN, algo_name, ANSI_RESET);
-    printf("%-8s%-8s%-8s%-8s%-8s%-8s%-8s%-8s\n", 
-           "PID", "AT", "BT", "Pri", "CT", "TAT", "WT", "RT");
-    for (int i = 0; i < n; i++) {
-        printf("%-8d%-8d%-8d%-8d%-8d%-8d%-8d%-8d\n",
-               p[i].ProcessId,
-               p[i].ArrivalTime,
-               p[i].BurstTime,
-               p[i].Priority,
-               p[i].CompletionTime,
-               p[i].TurnaroundTime,
-               p[i].WaitingTime,
-               p[i].ResponseTime);
-    }
-    
-    // Calculate and print averages
-    double sum_tat = 0, sum_wt = 0, sum_rt = 0;
-    int count_rt = 0;
-    for (int i = 0; i < n; i++) {
-        sum_tat += p[i].TurnaroundTime;
-        sum_wt += p[i].WaitingTime;
-        if (p[i].ResponseTime >= 0) {
-            sum_rt += p[i].ResponseTime;
-            count_rt++;
-        }
-    }
-    printf("\nAverage Turnaround Time: %.2f\n", sum_tat / n);
-    printf("Average Waiting Time: %.2f\n", sum_wt / n);
-    printf("Average Response Time: %.2f\n\n", count_rt > 0 ? sum_rt / count_rt : 0.0);
-}
+
 
 /**
  * @brief Display comparison table
@@ -113,42 +80,42 @@ void display_comparison(Process original[], int n, int time_quantum) {
     };
     
     // Run all algorithms and display their individual results
-    printf("Running all algorithms...\n\n");
+    printf("%sRunning all algorithms...%s\n\n", ANSI_YELLOW, ANSI_RESET);
     
     // 1. FCFS
     copy_processes(processes[0], original, n);
     fcfs(processes[0], n);
     strcpy(metrics[0].name, algo_names[0]);
     calculate_metrics(processes[0], n, &metrics[0]);
-    print_process_table(processes[0], n, algo_names[0]);
+    display_results(processes[0], n, algo_names[0]);
     
     // 2. SJF
     copy_processes(processes[1], original, n);
     sjf(processes[1], n);
     strcpy(metrics[1].name, algo_names[1]);
     calculate_metrics(processes[1], n, &metrics[1]);
-    print_process_table(processes[1], n, algo_names[1]);
+    display_results(processes[1], n, algo_names[1]);
     
     // 3. SRTF
     copy_processes(processes[2], original, n);
     srtf(processes[2], n);
     strcpy(metrics[2].name, algo_names[2]);
     calculate_metrics(processes[2], n, &metrics[2]);
-    print_process_table(processes[2], n, algo_names[2]);
+    display_results(processes[2], n, algo_names[2]);
     
     // 4. Priority Non-Preemptive
     copy_processes(processes[3], original, n);
     priority_non_preemptive(processes[3], n);
     strcpy(metrics[3].name, algo_names[3]);
     calculate_metrics(processes[3], n, &metrics[3]);
-    print_process_table(processes[3], n, algo_names[3]);
+    display_results(processes[3], n, algo_names[3]);
     
     // 5. Priority Preemptive
     copy_processes(processes[4], original, n);
     priority_preemptive(processes[4], n);
     strcpy(metrics[4].name, algo_names[4]);
     calculate_metrics(processes[4], n, &metrics[4]);
-    print_process_table(processes[4], n, algo_names[4]);
+    display_results(processes[4], n, algo_names[4]);
     
     // 6. Round Robin
     copy_processes(processes[5], original, n);
@@ -156,39 +123,18 @@ void display_comparison(Process original[], int n, int time_quantum) {
     strcpy(metrics[5].name, algo_names[5]);
     calculate_metrics(processes[5], n, &metrics[5]);
     
-    // For Round Robin, we need to show time quantum in the header
-    printf("\n%s=== %s (Time Quantum = %d) ===%s\n", ANSI_CYAN, algo_names[5], time_quantum, ANSI_RESET);
-    printf("%-8s%-8s%-8s%-8s%-8s%-8s%-8s\n", 
-           "PID", "AT", "BT", "CT", "TAT", "WT", "RT");
-    for (int i = 0; i < n; i++) {
-        printf("%-8d%-8d%-8d%-8d%-8d%-8d%-8d\n",
-               processes[5][i].ProcessId,
-               processes[5][i].ArrivalTime,
-               processes[5][i].BurstTime,
-               processes[5][i].CompletionTime,
-               processes[5][i].TurnaroundTime,
-               processes[5][i].WaitingTime,
-               processes[5][i].ResponseTime);
-    }
+    char rr_title[100];
+    snprintf(rr_title, sizeof(rr_title), "%s (Time Quantum = %d)", algo_names[5], time_quantum);
+    display_results(processes[5], n, rr_title);
     
-    // Calculate and print averages for Round Robin
-    double sum_tat = 0, sum_wt = 0, sum_rt = 0;
-    int count_rt = 0;
-    for (int i = 0; i < n; i++) {
-        sum_tat += processes[5][i].TurnaroundTime;
-        sum_wt += processes[5][i].WaitingTime;
-        if (processes[5][i].ResponseTime >= 0) {
-            sum_rt += processes[5][i].ResponseTime;
-            count_rt++;
-        }
-    }
-    printf("\nAverage Turnaround Time: %.2f\n", sum_tat / n);
-    printf("Average Waiting Time: %.2f\n", sum_wt / n);
-    printf("Average Response Time: %.2f\n", count_rt > 0 ? sum_rt / count_rt : 0.0);
+    printf("\n");
+    print_box_header("COMPARISON SUMMARY");
     
     // Print comparison table
     printf("╔════════════════╦══════════╦══════════╦══════════╦══════════╦═══════════╗\n");
-    printf("║   Algorithm    ║ Avg WT   ║ Avg TAT  ║ Avg RT   ║ CPU Util ║ Throughput║\n");
+    printf("║ %sAlgorithm%s      ║ %sAvg WT%s   ║ %sAvg TAT%s  ║ %sAvg RT%s   ║ %sCPU Util%s ║ %sThroughput%s║\n",
+           ANSI_BOLD, ANSI_RESET, ANSI_BOLD, ANSI_RESET, ANSI_BOLD, ANSI_RESET,
+           ANSI_BOLD, ANSI_RESET, ANSI_BOLD, ANSI_RESET, ANSI_BOLD, ANSI_RESET);
     printf("╠════════════════╬══════════╬══════════╬══════════╬══════════╬═══════════╣\n");
     
     int best_wt_idx = 0, best_tat_idx = 0, best_rt_idx = 0;
@@ -221,18 +167,23 @@ void display_comparison(Process original[], int n, int time_quantum) {
     
     printf("╚════════════════╩══════════╩══════════╩══════════╩══════════╩═══════════╝\n\n");
     
-    // Highlight best algorithms
-    printf("%sBest Algorithm for:%s\n", ANSI_BOLD ANSI_GREEN, ANSI_RESET);
-    printf("  • Lowest Avg Waiting Time    : %s%s%s (%.2f)\n", 
-           ANSI_YELLOW, metrics[best_wt_idx].name, ANSI_RESET, min_wt);
-    printf("  • Lowest Avg Turnaround Time : %s%s%s (%.2f)\n", 
-           ANSI_YELLOW, metrics[best_tat_idx].name, ANSI_RESET, min_tat);
-    printf("  • Lowest Avg Response Time   : %s%s%s (%.2f)\n", 
-           ANSI_YELLOW, metrics[best_rt_idx].name, ANSI_RESET, min_rt);
+    // Highlight best algorithms in a box
+    printf("%s┌──────────────────────────────────────────────────┐%s\n", ANSI_GREEN, ANSI_RESET);
+    printf("%s│%s %sBest Performing Algorithms%s                  %s│%s\n", ANSI_GREEN, ANSI_RESET, ANSI_BOLD, ANSI_RESET, ANSI_GREEN, ANSI_RESET);
+    printf("%s├──────────────────────────────────────────────────┤%s\n", ANSI_GREEN, ANSI_RESET);
+    printf("%s│%s ★ Lowest Avg Waiting Time    : %s%s%s (%.2f) %s│%s\n", 
+           ANSI_GREEN, ANSI_RESET, ANSI_BOLD ANSI_YELLOW, metrics[best_wt_idx].name, ANSI_RESET, min_wt, ANSI_GREEN, ANSI_RESET);
+    printf("%s│%s ★ Lowest Avg Turnaround Time : %s%s%s (%.2f) %s│%s\n", 
+           ANSI_GREEN, ANSI_RESET, ANSI_BOLD ANSI_YELLOW, metrics[best_tat_idx].name, ANSI_RESET, min_tat, ANSI_GREEN, ANSI_RESET);
+    printf("%s│%s ★ Lowest Avg Response Time   : %s%s%s (%.2f) %s│%s\n", 
+           ANSI_GREEN, ANSI_RESET, ANSI_BOLD ANSI_YELLOW, metrics[best_rt_idx].name, ANSI_RESET, min_rt, ANSI_GREEN, ANSI_RESET);
+    printf("%s└──────────────────────────────────────────────────┘%s\n", ANSI_GREEN, ANSI_RESET);
     
     // Print bar chart for average waiting time
-    printf("\n%sAverage Waiting Time Comparison (Bar Chart):%s\n", 
-           ANSI_BOLD ANSI_CYAN, ANSI_RESET);
+    printf("\n%s┌──────────────────────────────────────────────────────────────────────┐%s\n", ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s %sAvg Waiting Time Comparison (Bar Chart)%s                       %s│%s\n", 
+           ANSI_CYAN, ANSI_RESET, ANSI_BOLD, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s├──────────────────────────────────────────────────────────────────────┤%s\n", ANSI_CYAN, ANSI_RESET);
     
     double max_wt = 0;
     for (int i = 0; i < 6; i++) {
@@ -242,26 +193,23 @@ void display_comparison(Process original[], int n, int time_quantum) {
     }
     
     for (int i = 0; i < 6; i++) {
-        printf("%-14s │ ", metrics[i].name);
+        printf("%s│%s %-12s │ ", ANSI_CYAN, ANSI_RESET, metrics[i].name);
         int bar_len = max_wt > 0 ? (int)((metrics[i].avg_waiting_time / max_wt) * 40) : 0;
         
-        // Color bars
         const char *color = (i == best_wt_idx) ? ANSI_GREEN : ANSI_BLUE;
         printf("%s", color);
         for (int j = 0; j < bar_len; j++) {
             printf("█");
         }
-        printf("%s %.2f\n", ANSI_RESET, metrics[i].avg_waiting_time);
+        printf("%s %.2f", ANSI_RESET, metrics[i].avg_waiting_time);
+        
+        // Add padding to align the right border
+        int remaining = 40 - bar_len;
+        for (int j = 0; j < remaining; j++) printf(" ");
+        printf("   %s│%s\n", ANSI_CYAN, ANSI_RESET);
     }
     
-    printf("\n");
-    print_separator();
+    printf("%s└──────────────────────────────────────────────────────────────────────┘%s\n", ANSI_CYAN, ANSI_RESET);
 }
 
-/**
- * @brief Display comparison with colored output
- */
-void display_comparison_colored(Process original[], int n, int time_quantum) {
-    // For now, just call the regular comparison (it already has colors)
-    display_comparison(original, n, time_quantum);
-}
+

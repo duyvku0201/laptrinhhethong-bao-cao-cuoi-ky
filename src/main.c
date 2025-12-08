@@ -35,47 +35,45 @@ int main() {
     int choice;                        // Lựa chọn của user
     int time_quantum;                  // Time quantum cho RR
 
-    // BƯỚC 1: Hiển thị header
+    // Clear screen and display welcome message
+    clear_screen();
     print_box_header("CPU SCHEDULING ALGORITHMS SIMULATOR");
 
-    printf("Welcome to CPU Scheduling Simulator!\n");
-    printf("This program implements 6 scheduling algorithms:\n");
-    printf("1. FCFS (First Come First Serve)\n");
-    printf("2. SJF (Shortest Job First)\n");
-    printf("3. SRTF (Shortest Remaining Time First)\n");
-    printf("4. Priority (Non-Preemptive)\n");
-    printf("5. Priority (Preemptive)\n");
-    printf("6. Round Robin\n\n");
+    printf("%sWelcome to CPU Scheduling Simulator!%s\n", ANSI_BOLD ANSI_GREEN, ANSI_RESET);
+    printf("This program implements %s6 scheduling algorithms%s:\n", ANSI_YELLOW, ANSI_RESET);
+    printf("  • FCFS (First Come First Serve)\n");
+    printf("  • SJF (Shortest Job First)\n");
+    printf("  • SRTF (Shortest Remaining Time First)\n");
+    printf("  • Priority (Non-Preemptive)\n");
+    printf("  • Priority (Preemptive)\n");
+    printf("  • Round Robin\n\n");
 
-    // BƯỚC 2: Đọc input
-    printf("How do you want to input process data?\n");
-    printf("1. Read from file\n");
-    printf("2. Enter from keyboard\n");
-    printf("Enter choice [1-2]: ");
-
-    int input_choice;
-    scanf("%d", &input_choice);
+    // Get input method
+    int input_choice = display_input_menu();
 
     if (input_choice == 1) {
-        // Đọc từ file
+        // Read from file
         char filename[256];
-        printf("Enter filename (e.g., tests/test_cases/test1.txt): ");
+        printf("\n%sEnter filename%s (e.g., tests/test_cases/test1.txt): ", ANSI_BOLD, ANSI_RESET);
         scanf("%s", filename);
 
         if (!read_from_file(filename, processes, &n)) {
-            printf("Error reading file. Exiting.\n");
+            printf("%sError reading file. Exiting.%s\n", ANSI_RED, ANSI_RESET);
             return 1;
         }
+        printf("%s✓ Successfully loaded %d processes%s\n", ANSI_GREEN, n, ANSI_RESET);
     }
     else if (input_choice == 2) {
-        // Đọc từ keyboard
+        // Read from keyboard
+        clear_screen();
         if (!read_from_keyboard(processes, &n)) {
-            printf("Error reading input. Exiting.\n");
+            printf("%sError reading input. Exiting.%s\n", ANSI_RED, ANSI_RESET);
             return 1;
         }
+        printf("%s✓ Successfully loaded %d processes%s\n", ANSI_GREEN, n, ANSI_RESET);
     }
     else {
-        printf("Invalid choice. Exiting.\n");
+        printf("%sInvalid choice. Exiting.%s\n", ANSI_RED, ANSI_RESET);
         return 1;
     }
 
@@ -84,6 +82,9 @@ int main() {
 
     // BƯỚC 3: Main loop
     do {
+        // Clear screen before showing menu
+        clear_screen();
+        
         // Reset processes về trạng thái ban đầu
         copy_processes(processes, original, n);
 
@@ -93,58 +94,69 @@ int main() {
         // BƯỚC 4: Xử lý lựa chọn
         switch (choice) {
         case 1: // FCFS
-            printf("\n--- Running FCFS Algorithm ---\n");
+            clear_screen();
+            printf("\n%s⚙ Running FCFS Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             fcfs(processes, n);
-            display_results(processes, n, "FCFS");
+            display_results(processes, n, "FCFS - First Come First Serve");
             break;
 
         case 2: // SJF
-            printf("\n--- Running SJF Algorithm ---\n");
+            clear_screen();
+            printf("\n%s⚙ Running SJF Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             sjf(processes, n);
-            display_results(processes, n, "SJF (Non-Preemptive)");
+            display_results(processes, n, "SJF - Shortest Job First (Non-Preemptive)");
             break;
 
         case 3: // SRTF
-            printf("\n--- Running SRTF Algorithm ---\n");
+            clear_screen();
+            printf("\n%s⚙ Running SRTF Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             srtf(processes, n);
-            display_results(processes, n, "SRTF (Preemptive SJF)");
+            display_results(processes, n, "SRTF - Shortest Remaining Time First");
             break;
 
         case 4: // Priority NP
-            printf("\n--- Running Priority (Non-Preemptive) Algorithm ---\n");
+            clear_screen();
+            printf("\n%s⚙ Running Priority (Non-Preemptive) Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             priority_non_preemptive(processes, n);
-            display_results(processes, n, "Priority (Non-Preemptive)");
+            display_results(processes, n, "Priority Scheduling (Non-Preemptive)");
             break;
 
         case 5: // Priority P
-            printf("\n--- Running Priority (Preemptive) Algorithm ---\n");
+            clear_screen();
+            printf("\n%s⚙ Running Priority (Preemptive) Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             priority_preemptive(processes, n);
-            display_results(processes, n, "Priority (Preemptive)");
+            display_results(processes, n, "Priority Scheduling (Preemptive)");
             break;
 
         case 6: // Round Robin
-            printf("\n--- Running Round Robin Algorithm ---\n");
-            printf("Enter time quantum: ");
+            clear_screen();
+            printf("\n%s⚙ Running Round Robin Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
+            printf("%sEnter time quantum:%s ", ANSI_BOLD, ANSI_RESET);
             scanf("%d", &time_quantum);
 
             if (!validate_time_quantum(time_quantum)) {
-                printf("Invalid time quantum. Using default: %d\n",
-                    DEFAULT_TIME_QUANTUM);
+                printf("%s⚠ Invalid time quantum. Using default: %d%s\n",
+                    ANSI_YELLOW, DEFAULT_TIME_QUANTUM, ANSI_RESET);
                 time_quantum = DEFAULT_TIME_QUANTUM;
             }
 
             round_robin(processes, n, time_quantum);
-            display_results(processes, n, "Round Robin");
+            char rr_title[100];
+            snprintf(rr_title, sizeof(rr_title), "Round Robin (Time Quantum = %d)", time_quantum);
+            display_results(processes, n, rr_title);
             break;
 
         case 7: // Compare All
-            printf("\n--- Comparing All Algorithms ---\n");
+            clear_screen();
+            printf("\n%s⚙ Comparing All Algorithms...%s\n", ANSI_YELLOW, ANSI_RESET);
             display_comparison(original, n, DEFAULT_TIME_QUANTUM);
             break;
 
         case 8: // Exit
-            printf("\nThank you for using CPU Scheduling Simulator!\n");
-            printf("Goodbye!\n");
+            clear_screen();
+            print_box_header("GOODBYE");
+            printf("%s✓ Thank you for using CPU Scheduling Simulator!%s\n", ANSI_GREEN, ANSI_RESET);
+            printf("%sGoodbye!%s\n\n", ANSI_CYAN, ANSI_RESET);
             break;
 
         default:

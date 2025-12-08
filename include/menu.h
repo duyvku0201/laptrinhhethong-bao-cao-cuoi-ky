@@ -3,10 +3,10 @@
 
 #include "process.h"
 
-void show_menu();
-void run_scheduling(int choice, Process p[], int n);
-void print_header();
-void print_process_table(Process p[], int n);
+// Display main menu and get algorithm choice
 int display_menu(void);
+
+// Display input method menu
+int display_input_menu(void);
 
 #endif
