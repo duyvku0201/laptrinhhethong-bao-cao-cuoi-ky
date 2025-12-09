@@ -1,62 +1,21 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
-#include "../../include/io.h"
+﻿#include "../../include/io.h"
+#include "../../include/utils.h" // Cần include cái này để dùng ESC_CANCEL
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 
-// Xóa buffer stdin
 void ClearInputBuffer(void) {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    // Không còn dùng nhiều vì get_int_input_with_esc tự xử lý
 }
 
-// Kiểm tra Process ID hợp lệ
-static bool IsValidProcessId(int ProcessId) {
-    if (ProcessId <= 0) {
-        printf("Error: Process ID must be > 0\n");
-        return false;
-    }
-    return true;
-}
-
-// Kiểm tra Arrival Time hợp lệ
-static bool IsValidArrivalTime(int ArrivalTime) {
-    if (ArrivalTime < 0) {
-        printf("Error: Arrival Time must be >= 0\n");
-        return false;
-    }
-    return true;
-}
-
-// Kiểm tra Burst Time hợp lệ
-static bool IsValidBurstTime(int BurstTime) {
-    if (BurstTime <= 0) {
-        printf("Error: Burst Time must be > 0\n");
-        return false;
-    }
-    return true;
-}
-
-// Kiểm tra Priority hợp lệ
-static bool IsValidPriority(int Priority) {
-    if (Priority < 0) {
-        printf("Error: Priority must be >= 0\n");
-        return false;
-    }
-    return true;
-}
-
-// Kiểm tra dữ liệu process hợp lệ (sử dụng early return)
 bool ValidateProcessData(Process* ProcessData) {
-    if (!IsValidProcessId(ProcessData->ProcessId)) return false;
-    if (!IsValidArrivalTime(ProcessData->ArrivalTime)) return false;
-    if (!IsValidBurstTime(ProcessData->BurstTime)) return false;
-    if (!IsValidPriority(ProcessData->Priority)) return false;
-
+    if (ProcessData->ProcessId <= 0) { printf("Error: Process ID > 0\n"); return false; }
+    if (ProcessData->ArrivalTime < 0) { printf("Error: Arrival Time >= 0\n"); return false; }
+    if (ProcessData->BurstTime <= 0) { printf("Error: Burst Time > 0\n"); return false; }
+    if (ProcessData->Priority < 0) { printf("Error: Priority >= 0\n"); return false; }
     return true;
 }
 
-// Khởi tạo giá trị mặc định cho process
 static void InitializeProcessDefaults(Process* ProcessData) {
     ProcessData->RemainingTime = ProcessData->BurstTime;
     ProcessData->WaitingTime = 0;
@@ -64,101 +23,61 @@ static void InitializeProcessDefaults(Process* ProcessData) {
     ProcessData->ResponseTime = -1;
     ProcessData->CompletionTime = 0;
     ProcessData->IsCompleted = false;
+    ProcessData->StartTime = -1;
 }
 
-// Đọc Process ID
-static bool ReadProcessId(Process* ProcessData) {
-    printf("Process ID: ");
-    if (scanf("%d", &ProcessData->ProcessId) != 1) {
-        ClearInputBuffer();
-        return false;
-    }
-    return true;
-}
+// Hàm nhập process đơn lẻ có hỗ trợ ESC
+static int ReadSingleProcess(Process* ProcessData, int Index) {
+    printf("\nProcess #%d (Press Esc to cancel):\n", Index);
 
-// Đọc Arrival Time
-static bool ReadArrivalTime(Process* ProcessData) {
-    printf("Arrival Time: ");
-    if (scanf("%d", &ProcessData->ArrivalTime) != 1) {
-        ClearInputBuffer();
-        return false;
-    }
-    return true;
-}
+    int val;
 
-// Đọc Burst Time
-static bool ReadBurstTime(Process* ProcessData) {
-    printf("Burst Time: ");
-    if (scanf("%d", &ProcessData->BurstTime) != 1) {
-        ClearInputBuffer();
-        return false;
-    }
-    return true;
-}
+    // Nhập ID
+    val = get_int_input_with_esc("Process ID: ");
+    if (val == ESC_CANCEL) return ESC_CANCEL;
+    ProcessData->ProcessId = val;
 
-// Đọc Priority
-static bool ReadPriority(Process* ProcessData) {
-    printf("Priority: ");
-    if (scanf("%d", &ProcessData->Priority) != 1) {
-        ClearInputBuffer();
-        return false;
-    }
-    return true;
-}
+    // Nhập Arrival
+    val = get_int_input_with_esc("Arrival Time: ");
+    if (val == ESC_CANCEL) return ESC_CANCEL;
+    ProcessData->ArrivalTime = val;
 
-// Đọc một process từ console (sử dụng early return)
-static bool ReadSingleProcess(Process* ProcessData, int Index) {
-    printf("\nProcess #%d:\n", Index);
+    // Nhập Burst
+    val = get_int_input_with_esc("Burst Time: ");
+    if (val == ESC_CANCEL) return ESC_CANCEL;
+    ProcessData->BurstTime = val;
 
-    if (!ReadProcessId(ProcessData)) return false;
-    if (!ReadArrivalTime(ProcessData)) return false;
-    if (!ReadBurstTime(ProcessData)) return false;
-    if (!ReadPriority(ProcessData)) return false;
-
-    ClearInputBuffer();
+    // Nhập Priority
+    val = get_int_input_with_esc("Priority: ");
+    if (val == ESC_CANCEL) return ESC_CANCEL;
+    ProcessData->Priority = val;
 
     InitializeProcessDefaults(ProcessData);
 
-    if (!ValidateProcessData(ProcessData)) return false;
+    if (!ValidateProcessData(ProcessData)) return 0; // 0 = Lỗi dữ liệu
 
-    printf("Process %s added successfully\n", ProcessData->ProcessId);
-    return true;
+    printf("Process %d added successfully\n", ProcessData->ProcessId);
+    return 1; // 1 = Thành công
 }
 
-// Kiểm tra số lượng process hợp lệ
-static bool IsValidProcessCount(int ProcessCount) {
-    if (ProcessCount < 1 || ProcessCount > MAX_PROCESSES) {
+bool ReadProcessesFromConsole(Process* Processes, int* ProcessCount) {
+    int count = get_int_input_with_esc("\nEnter number of processes (1-100): ");
+
+    if (count == ESC_CANCEL) return false;
+
+    if (count < 1 || count > MAX_PROCESSES) {
         printf("Error: Number of processes must be between 1 and %d\n", MAX_PROCESSES);
         return false;
     }
-    return true;
-}
 
-// Đọc số lượng processes
-static bool ReadProcessCount(int* ProcessCount) {
-    printf("\nEnter number of processes (1-%d): ", MAX_PROCESSES);
-    if (scanf("%d", ProcessCount) != 1) {
-        ClearInputBuffer();
-        return false;
-    }
-
-    if (!IsValidProcessCount(*ProcessCount)) {
-        ClearInputBuffer();
-        return false;
-    }
-
-    ClearInputBuffer();
-    return true;
-}
-
-// Đọc danh sách processes từ console
-bool ReadProcessesFromConsole(Process* Processes, int* ProcessCount) {
-    if (!ReadProcessCount(ProcessCount)) return false;
+    *ProcessCount = count;
 
     for (int i = 0; i < *ProcessCount; i++) {
-        bool Success = ReadSingleProcess(&Processes[i], i + 1);
+        int result = ReadSingleProcess(&Processes[i], i + 1);
 
-        if (!Success) {
+        if (result == ESC_CANCEL) return false; // Người dùng hủy nhập
+
+        if (result == 0) { // Lỗi dữ liệu
             printf("Error reading Process #%d. Please try again.\n", i + 1);
             i--;
             continue;

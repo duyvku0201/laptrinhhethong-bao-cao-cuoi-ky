@@ -3,9 +3,8 @@
 
 #include "process.h"
 
-void show_menu();
-void run_scheduling(int choice, Process p[], int n);
-void print_header();
-void print_process_table(Process p[], int n);
+// Menu functions updated to match implementation in ui/menu.c
+int display_menu(void);
+int display_input_menu(void);
 
-#endif
+#endif // MENU_H

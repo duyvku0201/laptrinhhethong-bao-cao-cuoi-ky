@@ -1,6 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
-#pragma once
-#ifndef PROCESS_H
+﻿#ifndef PROCESS_H
 #define PROCESS_H
 
 #include <stdbool.h>
@@ -9,9 +7,7 @@
 #define MAX_PROCESS_ID_LENGTH 20
 #define DEFAULT_TIME_QUANTUM 2
 
-// ==============================
 // Cấu trúc lưu thông tin process
-// ==============================
 typedef struct
 {
     int ProcessId;         // ID tiến trình
@@ -27,35 +23,29 @@ typedef struct
     bool IsCompleted;      // Trạng thái hoàn thành
 } Process;
 
-// ==============================
-// Khởi tạo và tạo Process
-// ==============================
+// Function prototypes
 void InitProcess(Process* ProcessData);
 Process CreateProcess(int Id, int Arrival, int Burst, int Priority);
 void ResetProcess(Process* ProcessData);
 void CopyProcess(Process* Destination, const Process* Source);
 
-// ==============================
-// Quản lý trạng thái Process
-// ==============================
+// Process State Checks
 bool IsProcessCompleted(const Process* ProcessData);
 bool HasProcessStarted(const Process* ProcessData);
+
+// Processing Functions
 void StartProcess(Process* ProcessData, int CurrentTime);
 int ExecuteProcess(Process* ProcessData, int TimeUnits);
 void CompleteProcess(Process* ProcessData, int CurrentTime);
 
-// ==============================
-// So sánh Processes (dùng cho qsort)
-// ==============================
+// Comparators (for sorting)
 int CompareProcessByArrival(const void* First, const void* Second);
 int CompareProcessByBurst(const void* First, const void* Second);
 int CompareProcessByRemaining(const void* First, const void* Second);
 int CompareProcessByPriority(const void* First, const void* Second);
 int CompareProcessById(const void* First, const void* Second);
 
-// ==============================
-// Validation và Display
-// ==============================
+// Validation & Display
 bool ValidateProcess(const Process* ProcessData);
 void PrintProcess(const Process* ProcessData);
 void PrintProcessShort(const Process* ProcessData);

@@ -1,175 +1,94 @@
-/**
- * @file gantt.c
- * @brief Gantt chart visualization for scheduling algorithms
- * @author Team CPU Scheduling
- */
-
 #include "../../include/display.h"
 #include "../../include/process.h"
 #include "../../include/utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-// Struct để lưu execution timeline
 typedef struct {
     int pid;
     int start;
     int end;
-} GanttSlot;
+} GanttEvent;
 
-/**
- * @brief So sánh để sort theo start time
- */
-static int compare_gantt(const void *a, const void *b) {
-    GanttSlot *ga = (GanttSlot *)a;
-    GanttSlot *gb = (GanttSlot *)b;
-    return ga->start - gb->start;
+static GanttEvent gantt_history[2000];
+static int gantt_count = 0;
+
+void reset_gantt_log(void) {
+    gantt_count = 0;
 }
 
-/**
- * @brief Display Gantt chart (basic version)
- * @param processes Array of processes
- * @param n Number of processes
- */
-void display_gantt_chart(Process processes[], int n) {
-    if (!processes || n <= 0) {
-        printf("\nNo processes to display in Gantt chart\n");
-        return;
+void log_gantt_event(int pid, int start, int end) {
+    if (start >= end) return;
+    if (gantt_count > 0 && gantt_history[gantt_count - 1].pid == pid && gantt_history[gantt_count - 1].end == start) {
+        gantt_history[gantt_count - 1].end = end;
     }
-    
-    printf("\n");
-    print_separator();
-    printf("                    GANTT CHART\n");
-    print_separator();
-    
-    // Sort processes by start time để hiển thị đúng thứ tự
-    GanttSlot slots[MAX_PROCESSES];
-    int slot_count = 0;
-    
-    for (int i = 0; i < n; i++) {
-        if (processes[i].StartTime >= 0 && processes[i].CompletionTime > 0) {
-            slots[slot_count].pid = processes[i].ProcessId;
-            slots[slot_count].start = processes[i].StartTime;
-            slots[slot_count].end = processes[i].CompletionTime;
-            slot_count++;
-        }
+    else {
+        gantt_history[gantt_count].pid = pid;
+        gantt_history[gantt_count].start = start;
+        gantt_history[gantt_count].end = end;
+        gantt_count++;
     }
-    
-    if (slot_count == 0) {
-        printf("No valid timeline data\n");
-        return;
-    }
-    
-    qsort(slots, slot_count, sizeof(GanttSlot), compare_gantt);
-    
-    // Print top border
-    printf(" ");
-    for (int i = 0; i < slot_count; i++) {
-        printf("+------");
-    }
-    printf("+\n");
-    
-    // Print process IDs
-    printf(" ");
-    for (int i = 0; i < slot_count; i++) {
-        printf("|  P%-3d", slots[i].pid);
-    }
-    printf("|\n");
-    
-    // Print bottom border
-    printf(" ");
-    for (int i = 0; i < slot_count; i++) {
-        printf("+------");
-    }
-    printf("+\n");
-    
-    // Print timeline
-    printf("%-2d", slots[0].start);
-    for (int i = 0; i < slot_count; i++) {
-        printf("      %-2d", slots[i].end);
-    }
-    printf("\n\n");
 }
 
-/**
- * @brief Display Gantt chart with colors
- * @param processes Array of processes
- * @param n Number of processes
- */
 void display_gantt_chart_colored(Process processes[], int n) {
-    if (!processes || n <= 0) {
-        printf("\nNo processes to display in Gantt chart\n");
+    if (gantt_count == 0) {
+        printf("\nNo Gantt data available.\n");
         return;
     }
-    
     printf("\n");
-    print_colored(ANSI_CYAN, "========================================");
+    print_separator(60, '=');
+    printf("          GANTT CHART\n");
+    print_separator(60, '=');
     printf("\n");
-    print_colored(ANSI_BOLD ANSI_YELLOW, "          GANTT CHART (Colored)        ");
-    printf("\n");
-    print_colored(ANSI_CYAN, "========================================");
-    printf("\n\n");
-    
-    // Sort processes by start time
-    GanttSlot slots[MAX_PROCESSES];
-    int slot_count = 0;
-    
-    for (int i = 0; i < n; i++) {
-        if (processes[i].StartTime >= 0 && processes[i].CompletionTime > 0) {
-            slots[slot_count].pid = processes[i].ProcessId;
-            slots[slot_count].start = processes[i].StartTime;
-            slots[slot_count].end = processes[i].CompletionTime;
-            slot_count++;
-        }
-    }
-    
-    if (slot_count == 0) {
-        print_colored(ANSI_RED, "No valid timeline data\n");
-        return;
-    }
-    
-    qsort(slots, slot_count, sizeof(GanttSlot), compare_gantt);
-    
-    // Colors cho mỗi process (cycle through colors)
-    const char *colors[] = {
-        ANSI_GREEN, ANSI_YELLOW, ANSI_BLUE, 
-        ANSI_MAGENTA, ANSI_CYAN, ANSI_RED
-    };
-    int num_colors = 6;
-    
-    // Print top border
+
+    // Top border
     printf(" ");
-    print_colored(ANSI_CYAN, "+");
-    for (int i = 0; i < slot_count; i++) {
-        print_colored(ANSI_CYAN, "------+");
+    for (int i = 0; i < gantt_count; i++) {
+        print_colored(ANSI_CYAN, "+");
+        int duration = gantt_history[i].end - gantt_history[i].start;
+        int bar_len = (duration > 2) ? 6 : 4;
+        for (int k = 0; k < bar_len; k++) print_colored(ANSI_CYAN, "-");
     }
-    printf("\n");
-    
-    // Print process IDs với màu
+    print_colored(ANSI_CYAN, "+\n");
+
+    // PID
     printf(" ");
-    print_colored(ANSI_CYAN, "|");
-    for (int i = 0; i < slot_count; i++) {
-        const char *color = colors[(slots[i].pid - 1) % num_colors];
-        printf("%s  P%-3d%s", color, slots[i].pid, ANSI_RESET);
+    for (int i = 0; i < gantt_count; i++) {
         print_colored(ANSI_CYAN, "|");
+        int duration = gantt_history[i].end - gantt_history[i].start;
+        int bar_len = (duration > 2) ? 6 : 4;
+        char pid_str[10];
+        sprintf(pid_str, "P%d", gantt_history[i].pid);
+        int padding = (bar_len - (int)strlen(pid_str)) / 2;
+        for (int k = 0; k < padding; k++) printf(" ");
+        printf("%s%s%s", ANSI_GREEN, pid_str, ANSI_RESET);
+        for (int k = 0; k < bar_len - padding - strlen(pid_str); k++) printf(" ");
     }
-    printf("\n");
-    
-    // Print bottom border
+    print_colored(ANSI_CYAN, "|\n");
+
+    // Bottom border
     printf(" ");
-    print_colored(ANSI_CYAN, "+");
-    for (int i = 0; i < slot_count; i++) {
-        print_colored(ANSI_CYAN, "------+");
+    for (int i = 0; i < gantt_count; i++) {
+        print_colored(ANSI_CYAN, "+");
+        int duration = gantt_history[i].end - gantt_history[i].start;
+        int bar_len = (duration > 2) ? 6 : 4;
+        for (int k = 0; k < bar_len; k++) print_colored(ANSI_CYAN, "-");
     }
-    printf("\n");
-    
-    // Print timeline
-    printf("%s%-2d%s", ANSI_BOLD, slots[0].start, ANSI_RESET);
-    for (int i = 0; i < slot_count; i++) {
-        printf("      %s%-2d%s", ANSI_BOLD, slots[i].end, ANSI_RESET);
+    print_colored(ANSI_CYAN, "+\n");
+
+    // Timeline
+    printf("%-2d", gantt_history[0].start);
+    for (int i = 0; i < gantt_count; i++) {
+        int duration = gantt_history[i].end - gantt_history[i].start;
+        int bar_len = (duration > 2) ? 6 : 4;
+        int num_len = (gantt_history[i].end >= 100) ? 3 : (gantt_history[i].end >= 10) ? 2 : 1;
+        for (int k = 0; k < bar_len + 1 - num_len; k++) printf(" ");
+        printf("%d", gantt_history[i].end);
     }
     printf("\n\n");
-    
-    // Print legend
-    print_colored(ANSI_DIM, "Legend: Each block represents execution period of a process\n");
+}
+
+void display_gantt_chart(Process processes[], int n) {
+    display_gantt_chart_colored(processes, n);
 }

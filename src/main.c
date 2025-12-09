@@ -1,159 +1,91 @@
-﻿
-#define _CRT_SECURE_NO_WARNINGS
-
-/**
- * @file main.c
- * @brief Main entry point của chương trình
- */
-
-#include "include/process.h"
-#include "include/algorithms.h"
-#include "include/io.h"
-#include "include/display.h"
-#include "include/utils.h"
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
+#include "../include/process.h"
+#include "../include/algorithms.h"
+#include "../include/io.h"
+#include "../include/display.h"
+#include "../include/utils.h"
+#include "../include/menu.h"
 
- /**
-  * @brief Main function
-  * Flow:
-  * 1. Hiển thị header
-  * 2. Đọc input (file hoặc keyboard)
-  * 3. Hiển thị menu chọn algorithm
-  * 4. Chạy algorithm được chọn
-  * 5. Hiển thị kết quả
-  * 6. Lặp lại hoặc exit
-  */
 int main() {
-    // Khai báo biến
-    Process processes[MAX_PROCESSES];  // Mảng processes
-    Process original[MAX_PROCESSES];   // Backup để so sánh
-    int n = 0;                         // Số processes
-    int choice;                        // Lựa chọn của user
-    int time_quantum;                  // Time quantum cho RR
+    Process processes[MAX_PROCESSES];
+    Process original[MAX_PROCESSES];
+    int n = 0;
+    int choice;
+    int time_quantum;
+    int input_method;
 
-    // BƯỚC 1: Hiển thị header
-    print_header("CPU SCHEDULING ALGORITHMS SIMULATOR");
+    while (1) {
+        clear_screen();
+        print_box_header("CPU SCHEDULING ALGORITHMS SIMULATOR");
 
-    printf("Welcome to CPU Scheduling Simulator!\n");
-    printf("This program implements 6 scheduling algorithms:\n");
-    printf("1. FCFS (First Come First Serve)\n");
-    printf("2. SJF (Shortest Job First)\n");
-    printf("3. SRTF (Shortest Remaining Time First)\n");
-    printf("4. Priority (Non-Preemptive)\n");
-    printf("5. Priority (Preemptive)\n");
-    printf("6. Round Robin\n\n");
+        // === 1. NHẬP LIỆU ===
+        input_method = display_input_menu();
 
-    // BƯỚC 2: Đọc input
-    printf("How do you want to input process data?\n");
-    printf("1. Read from file\n");
-    printf("2. Enter from keyboard\n");
-    printf("Enter choice [1-2]: ");
+        // Nếu nhấn ESC ở menu chọn kiểu nhập -> Reset lại từ đầu
+        if (input_method == ESC_CANCEL) continue;
 
-    int input_choice;
-    scanf("%d", &input_choice);
+        if (input_method == 1) { // File
+            char filename[256];
+            int ret = get_str_input_with_esc("Enter filename (e.g., tests/test_cases/test1.txt): ", filename, 256);
 
-    if (input_choice == 1) {
-        // Đọc từ file
-        char filename[256];
-        printf("Enter filename (e.g., tests/test_cases/test1.txt): ");
-        scanf("%s", filename);
+            if (ret == ESC_CANCEL) continue; // Nhấn Esc khi nhập tên file
 
-        if (!read_from_file(filename, processes, &n)) {
-            printf("Error reading file. Exiting.\n");
-            return 1;
+            if (!LoadProcessesFromFile(filename, processes, &n)) {
+                printf("Failed to load file. Press Enter to retry.\n");
+                wait_for_enter_with_esc();
+                continue;
+            }
         }
-    }
-    else if (input_choice == 2) {
-        // Đọc từ keyboard
-        if (!read_from_keyboard(processes, &n)) {
-            printf("Error reading input. Exiting.\n");
-            return 1;
+        else { // Keyboard
+            if (!ReadProcessesFromConsole(processes, &n)) {
+                // Nếu hàm trả về false (do nhấn Esc), ta quay lại màn hình chính ngay
+                continue;
+            }
         }
-    }
-    else {
-        printf("Invalid choice. Exiting.\n");
-        return 1;
-    }
 
-    // Backup processes gốc
-    copy_processes(original, processes, n);
+        copy_processes(original, processes, n);
 
-    // BƯỚC 3: Main loop
-    do {
-        // Reset processes về trạng thái ban đầu
-        copy_processes(processes, original, n);
+        // === 2. CHẠY THUẬT TOÁN ===
+        do {
+            copy_processes(processes, original, n);
+            reset_gantt_log();
 
-        // Hiển thị menu
-        choice = display_menu();
+            choice = display_menu();
 
-        // BƯỚC 4: Xử lý lựa chọn
-        switch (choice) {
-        case 1: // FCFS
-            printf("\n--- Running FCFS Algorithm ---\n");
-            fcfs(processes, n);
-            display_results(processes, n, "FCFS");
-            break;
+            // Nếu nhấn Esc ở menu thuật toán -> Quay lại màn hình nhập liệu (Màn hình đầu tiên)
+            if (choice == ESC_CANCEL) break;
 
-        case 2: // SJF
-            printf("\n--- Running SJF Algorithm ---\n");
-            sjf(processes, n);
-            display_results(processes, n, "SJF (Non-Preemptive)");
-            break;
+            switch (choice) {
+            case 1: fcfs(processes, n); display_results(processes, n, "FCFS"); display_gantt_chart(processes, n); break;
+            case 2: sjf(processes, n); display_results(processes, n, "SJF"); display_gantt_chart(processes, n); break;
+            case 3: srtf(processes, n); display_results(processes, n, "SRTF"); display_gantt_chart(processes, n); break;
+            case 4: priority_non_preemptive(processes, n); display_results(processes, n, "Priority NP"); display_gantt_chart(processes, n); break;
+            case 5: priority_preemptive(processes, n); display_results(processes, n, "Priority P"); display_gantt_chart(processes, n); break;
+            case 6:
+                // Nhập Quantum cũng hỗ trợ Esc
+                time_quantum = get_int_input_with_esc("Enter Time Quantum: ");
+                if (time_quantum == ESC_CANCEL) break; // Thoát case, quay lại menu thuật toán
 
-        case 3: // SRTF
-            printf("\n--- Running SRTF Algorithm ---\n");
-            srtf(processes, n);
-            display_results(processes, n, "SRTF (Preemptive SJF)");
-            break;
-
-        case 4: // Priority NP
-            printf("\n--- Running Priority (Non-Preemptive) Algorithm ---\n");
-            priority_non_preemptive(processes, n);
-            display_results(processes, n, "Priority (Non-Preemptive)");
-            break;
-
-        case 5: // Priority P
-            printf("\n--- Running Priority (Preemptive) Algorithm ---\n");
-            priority_preemptive(processes, n);
-            display_results(processes, n, "Priority (Preemptive)");
-            break;
-
-        case 6: // Round Robin
-            printf("\n--- Running Round Robin Algorithm ---\n");
-            printf("Enter time quantum: ");
-            scanf("%d", &time_quantum);
-
-            if (!validate_time_quantum(time_quantum)) {
-                printf("Invalid time quantum. Using default: %d\n",
-                    DEFAULT_TIME_QUANTUM);
-                time_quantum = DEFAULT_TIME_QUANTUM;
+                round_robin(processes, n, time_quantum);
+                display_results(processes, n, "Round Robin");
+                display_gantt_chart(processes, n);
+                break;
+            case 7: display_comparison(original, n, 2); break;
+            case 8:
+                printf("Exiting program... Goodbye!\n");
+                return 0;
             }
 
-            round_robin(processes, n, time_quantum);
-            display_results(processes, n, "Round Robin");
-            break;
-
-        case 7: // Compare All
-            printf("\n--- Comparing All Algorithms ---\n");
-            display_comparison(original, n, DEFAULT_TIME_QUANTUM);
-            break;
-
-        case 8: // Exit
-            printf("\nThank you for using CPU Scheduling Simulator!\n");
-            printf("Goodbye!\n");
-            break;
-
-        default:
-            printf("Invalid choice. Please try again.\n");
-        }
-
-        // Pause để user đọc kết quả
-        if (choice != 8) {
-            wait_for_enter();
-        }
-
-    } while (choice != 8);
+            // Dừng màn hình để xem kết quả. Nếu nhấn Esc ở đây -> Quay về menu thuật toán
+            if (choice != 8) {
+                if (wait_for_enter_with_esc() == ESC_CANCEL) {
+                    // Tùy chọn: Nhấn Esc lúc xem kết quả thì về Menu thuật toán
+                    // Nếu muốn về hẳn màn hình đầu tiên thì thêm logic break
+                }
+            }
+        } while (choice != 8);
+    }
 
     return 0;
 }
