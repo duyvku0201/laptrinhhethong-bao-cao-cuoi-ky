@@ -73,10 +73,6 @@ float CalculateThroughput(int ProcessCount, int TotalTime) {
     return (float)ProcessCount / TotalTime;
 }
 
-void DisplayAllMetrics(Process* Processes, int ProcessCount, int TotalTime) {
-    // Chỉ là hàm hiển thị phụ, có thể để trống hoặc implement đơn giản
-    // Các hàm hiển thị chính nằm ở display.c
-}
 
 bool ValidateMetrics(Process* ProcessData) {
     if (ProcessData == NULL) return false;

@@ -18,7 +18,6 @@ void CalculateAllMetrics(Process* Processes, int ProcessCount);
 float CalculateCpuUtilization(Process* Processes, int ProcessCount, int TotalTime);
 float CalculateThroughput(int ProcessCount, int TotalTime);
 
-void DisplayAllMetrics(Process* Processes, int ProcessCount, int TotalTime);
 bool ValidateMetrics(Process* ProcessData);
 
 #endif // METRICS_H

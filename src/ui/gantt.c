@@ -32,6 +32,9 @@ void log_gantt_event(int pid, int start, int end) {
 }
 
 void display_gantt_chart_colored(Process processes[], int n) {
+    (void)processes;
+    (void)n;
+
     if (gantt_count == 0) {
         printf("\nNo Gantt data available.\n");
         return;
@@ -63,7 +66,7 @@ void display_gantt_chart_colored(Process processes[], int n) {
         int padding = (bar_len - (int)strlen(pid_str)) / 2;
         for (int k = 0; k < padding; k++) printf(" ");
         printf("%s%s%s", ANSI_GREEN, pid_str, ANSI_RESET);
-        for (int k = 0; k < bar_len - padding - strlen(pid_str); k++) printf(" ");
+        for (int k = 0; k < bar_len - padding - (int)strlen(pid_str); k++) printf(" ");
     }
     print_colored(ANSI_CYAN, "|\n");
 
