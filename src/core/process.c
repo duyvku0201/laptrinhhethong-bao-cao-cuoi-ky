@@ -10,6 +10,48 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Global timeline để track execution history
+TimelineEntry global_timeline[MAX_TIMELINE_ENTRIES];
+int global_timeline_count = 0;
+
+/**
+ * @brief Reset timeline về trạng thái ban đầu
+ */
+void reset_timeline(void) {
+    global_timeline_count = 0;
+    for (int i = 0; i < MAX_TIMELINE_ENTRIES; i++) {
+        global_timeline[i].process_id = -1;
+        global_timeline[i].start_time = 0;
+        global_timeline[i].end_time = 0;
+    }
+}
+
+/**
+ * @brief Thêm entry vào timeline
+ * @param process_id ID của process
+ * @param start_time Thời điểm bắt đầu
+ * @param end_time Thời điểm kết thúc
+ */
+void add_timeline_entry(int process_id, int start_time, int end_time) {
+    if (global_timeline_count >= MAX_TIMELINE_ENTRIES) {
+        return; // Timeline đã đầy
+    }
+    
+    // Merge với entry trước nếu cùng process và liên tục
+    if (global_timeline_count > 0) {
+        TimelineEntry *last = &global_timeline[global_timeline_count - 1];
+        if (last->process_id == process_id && last->end_time == start_time) {
+            last->end_time = end_time;
+            return;
+        }
+    }
+    
+    global_timeline[global_timeline_count].process_id = process_id;
+    global_timeline[global_timeline_count].start_time = start_time;
+    global_timeline[global_timeline_count].end_time = end_time;
+    global_timeline_count++;
+}
+
  /**
   * Khởi tạo một tiến trình với giá trị mặc định
   * @param ProcessData Con trỏ tới tiến trình cần khởi tạo

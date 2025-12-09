@@ -37,6 +37,9 @@ void priority_preemptive(Process processes[], int n) {
         return;
     }
 
+    // Reset timeline
+    reset_timeline();
+    
     // Khởi tạo
     int remaining_time[MAX_PROCESSES];
     bool is_completed[MAX_PROCESSES];
@@ -107,8 +110,12 @@ void priority_preemptive(Process processes[], int n) {
         }
         
         // Execute process trong 1 time unit
+        int start = current_time;
         remaining_time[highest_priority_idx]--;
         current_time++;
+        
+        // Add to timeline (will be merged if same process)
+        add_timeline_entry(processes[highest_priority_idx].ProcessId, start, current_time);
         
         // Kiểm tra process có hoàn thành không
         if (remaining_time[highest_priority_idx] == 0) {

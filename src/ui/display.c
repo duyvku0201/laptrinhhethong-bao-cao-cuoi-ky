@@ -74,17 +74,17 @@ void display_results(Process p[], int n, const char *algo) {
     double cpu_util = max_ct > 0 ? (double)total_bt / max_ct * 100.0 : 0.0;
     double throughput = max_ct > 0 ? (double)n / max_ct : 0.0;
     
-    // Display metrics in a nice box
+    // Display metrics in a nice box with proper alignment
     printf("\n%s┌──────────────────────────────────────────────────┐%s\n", ANSI_CYAN, ANSI_RESET);
     printf("%s│%s %sPerformance Metrics%s                          %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_BOLD, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
     printf("%s├──────────────────────────────────────────────────┤%s\n", ANSI_CYAN, ANSI_RESET);
-    printf("%s│%s Average Waiting Time    : %s%.2f%s           %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_GREEN, avg_wt, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
-    printf("%s│%s Average Turnaround Time : %s%.2f%s           %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_GREEN, avg_tat, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
-    printf("%s│%s Average Response Time   : %s%.2f%s           %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_GREEN, avg_rt, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
-    printf("%s│%s Min/Max Waiting Time    : %s%d / %d%s         %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_YELLOW, min_wt, max_wt, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
-    printf("%s│%s Min/Max Turnaround Time : %s%d / %d%s         %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_YELLOW, min_tat, max_tat, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
-    printf("%s│%s CPU Utilization         : %s%.2f%%%s          %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_MAGENTA, cpu_util, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
-    printf("%s│%s Throughput              : %s%.4f%s proc/time %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_MAGENTA, throughput, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s Average Waiting Time    : %s%-20.2f%s %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_GREEN, avg_wt, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s Average Turnaround Time : %s%-20.2f%s %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_GREEN, avg_tat, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s Average Response Time   : %s%-20.2f%s %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_GREEN, avg_rt, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s Min/Max Waiting Time    : %s%-3d / %-14d%s %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_YELLOW, min_wt, max_wt, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s Min/Max Turnaround Time : %s%-3d / %-14d%s %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_YELLOW, min_tat, max_tat, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s CPU Utilization         : %s%-19.2f%%%s %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_MAGENTA, cpu_util, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
+    printf("%s│%s Throughput              : %s%-6.4f proc/time%s   %s│%s\n", ANSI_CYAN, ANSI_RESET, ANSI_MAGENTA, throughput, ANSI_RESET, ANSI_CYAN, ANSI_RESET);
     printf("%s└──────────────────────────────────────────────────┘%s\n", ANSI_CYAN, ANSI_RESET);
 }
 

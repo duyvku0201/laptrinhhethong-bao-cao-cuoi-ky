@@ -8,6 +8,9 @@
 #include <limits.h>
 
 void priority_non_preemptive(Process processes[], int n) {
+    // Reset timeline
+    reset_timeline();
+    
     int current_time = 0;
     int completed = 0;
 
@@ -38,10 +41,14 @@ void priority_non_preemptive(Process processes[], int n) {
         }
 
         processes[highest_idx].StartTime = current_time;
+        int start = current_time;
         current_time += processes[highest_idx].BurstTime;
         processes[highest_idx].CompletionTime = current_time;
         processes[highest_idx].IsCompleted = true;
         completed++;
+        
+        // Add to timeline
+        add_timeline_entry(processes[highest_idx].ProcessId, start, current_time);
     }
 
     CalculateAllMetrics(processes, n);
