@@ -98,6 +98,7 @@ int main() {
             printf("\n%s⚙ Running FCFS Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             fcfs(processes, n);
             display_results(processes, n, "FCFS - First Come First Serve");
+            display_gantt_chart(processes, n);
             break;
 
         case 2: // SJF
@@ -105,6 +106,7 @@ int main() {
             printf("\n%s⚙ Running SJF Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             sjf(processes, n);
             display_results(processes, n, "SJF - Shortest Job First (Non-Preemptive)");
+            display_gantt_chart(processes, n);
             break;
 
         case 3: // SRTF
@@ -112,6 +114,7 @@ int main() {
             printf("\n%s⚙ Running SRTF Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             srtf(processes, n);
             display_results(processes, n, "SRTF - Shortest Remaining Time First");
+            display_gantt_chart(processes, n);
             break;
 
         case 4: // Priority NP
@@ -119,6 +122,7 @@ int main() {
             printf("\n%s⚙ Running Priority (Non-Preemptive) Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             priority_non_preemptive(processes, n);
             display_results(processes, n, "Priority Scheduling (Non-Preemptive)");
+            display_gantt_chart(processes, n);
             break;
 
         case 5: // Priority P
@@ -126,6 +130,7 @@ int main() {
             printf("\n%s⚙ Running Priority (Preemptive) Algorithm...%s\n", ANSI_YELLOW, ANSI_RESET);
             priority_preemptive(processes, n);
             display_results(processes, n, "Priority Scheduling (Preemptive)");
+            display_gantt_chart(processes, n);
             break;
 
         case 6: // Round Robin
@@ -144,6 +149,7 @@ int main() {
             char rr_title[100];
             snprintf(rr_title, sizeof(rr_title), "Round Robin (Time Quantum = %d)", time_quantum);
             display_results(processes, n, rr_title);
+            display_gantt_chart(processes, n);
             break;
 
         case 7: // Compare All

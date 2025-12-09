@@ -8,6 +8,9 @@
 #include "metrics.h"
 
 void fcfs(Process processes[], int n) {
+    // Reset timeline
+    reset_timeline();
+    
     sort_by_arrival(processes, n);
     
     int current_time = 0;
@@ -18,9 +21,13 @@ void fcfs(Process processes[], int n) {
         }
         
         processes[i].StartTime = current_time;
+        int start = current_time;
         current_time += processes[i].BurstTime;
         processes[i].CompletionTime = current_time;
         processes[i].IsCompleted = true;
+        
+        // Add to timeline
+        add_timeline_entry(processes[i].ProcessId, start, current_time);
     }
     
     CalculateAllMetrics(processes, n);

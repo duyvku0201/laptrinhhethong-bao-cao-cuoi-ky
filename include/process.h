@@ -5,6 +5,18 @@
 
 #define MAX_PROCESSES 100
 #define DEFAULT_TIME_QUANTUM 2
+#define MAX_TIMELINE_ENTRIES 1000
+
+// Struct để lưu execution timeline của process
+typedef struct {
+    int process_id;
+    int start_time;
+    int end_time;
+} TimelineEntry;
+
+// Global timeline để lưu lại execution history
+extern TimelineEntry global_timeline[MAX_TIMELINE_ENTRIES];
+extern int global_timeline_count;
 
 // Cấu trúc Process
 typedef struct
@@ -54,5 +66,11 @@ int CompareProcessById(const void* First, const void* Second);
 bool ValidateProcess(const Process* ProcessData);
 void PrintProcess(const Process* ProcessData);
 void PrintProcessShort(const Process* ProcessData);
+
+// ==============================
+// Timeline tracking
+// ==============================
+void reset_timeline(void);
+void add_timeline_entry(int process_id, int start_time, int end_time);
 
 #endif // PROCESS_H

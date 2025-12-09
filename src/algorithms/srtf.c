@@ -8,6 +8,9 @@
 #include <limits.h>
 
 void srtf(Process processes[], int n) {
+    // Reset timeline
+    reset_timeline();
+    
     int current_time = 0;
     int completed = 0;
 
@@ -43,8 +46,12 @@ void srtf(Process processes[], int n) {
         }
 
         // Thực thi 1 đơn vị thời gian
+        int start = current_time;
         processes[shortest_idx].RemainingTime--;
         current_time++;
+        
+        // Add to timeline (will be merged if same process)
+        add_timeline_entry(processes[shortest_idx].ProcessId, start, current_time);
 
         // Process hoàn thành
         if (processes[shortest_idx].RemainingTime == 0) {

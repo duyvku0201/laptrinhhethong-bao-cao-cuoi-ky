@@ -40,6 +40,9 @@ void round_robin(Process processes[], int n, int time_quantum) {
         return;
     }
 
+    // Reset timeline
+    reset_timeline();
+    
     // Khởi tạo
     Queue ready_queue;
     queue_init(&ready_queue);
@@ -121,8 +124,12 @@ void round_robin(Process processes[], int n, int time_quantum) {
                             : time_quantum;
         
         // Chạy process
+        int start = current_time;
         processes[current_process].RemainingTime -= execution_time;
         current_time += execution_time;
+        
+        // Add to timeline
+        add_timeline_entry(processes[current_process].ProcessId, start, current_time);
         
         // Thêm các process mới đến vào queue (trong khoảng vừa chạy)
         for (int i = 0; i < n; i++) {

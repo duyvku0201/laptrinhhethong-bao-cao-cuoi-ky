@@ -88,6 +88,7 @@ void display_comparison(Process original[], int n, int time_quantum) {
     strcpy(metrics[0].name, algo_names[0]);
     calculate_metrics(processes[0], n, &metrics[0]);
     display_results(processes[0], n, algo_names[0]);
+    display_gantt_chart(processes[0], n);
     
     // 2. SJF
     copy_processes(processes[1], original, n);
@@ -95,6 +96,7 @@ void display_comparison(Process original[], int n, int time_quantum) {
     strcpy(metrics[1].name, algo_names[1]);
     calculate_metrics(processes[1], n, &metrics[1]);
     display_results(processes[1], n, algo_names[1]);
+    display_gantt_chart(processes[1], n);
     
     // 3. SRTF
     copy_processes(processes[2], original, n);
@@ -102,6 +104,7 @@ void display_comparison(Process original[], int n, int time_quantum) {
     strcpy(metrics[2].name, algo_names[2]);
     calculate_metrics(processes[2], n, &metrics[2]);
     display_results(processes[2], n, algo_names[2]);
+    display_gantt_chart(processes[2], n);
     
     // 4. Priority Non-Preemptive
     copy_processes(processes[3], original, n);
@@ -109,6 +112,7 @@ void display_comparison(Process original[], int n, int time_quantum) {
     strcpy(metrics[3].name, algo_names[3]);
     calculate_metrics(processes[3], n, &metrics[3]);
     display_results(processes[3], n, algo_names[3]);
+    display_gantt_chart(processes[3], n);
     
     // 5. Priority Preemptive
     copy_processes(processes[4], original, n);
@@ -116,6 +120,7 @@ void display_comparison(Process original[], int n, int time_quantum) {
     strcpy(metrics[4].name, algo_names[4]);
     calculate_metrics(processes[4], n, &metrics[4]);
     display_results(processes[4], n, algo_names[4]);
+    display_gantt_chart(processes[4], n);
     
     // 6. Round Robin
     copy_processes(processes[5], original, n);
@@ -126,6 +131,7 @@ void display_comparison(Process original[], int n, int time_quantum) {
     char rr_title[100];
     snprintf(rr_title, sizeof(rr_title), "%s (Time Quantum = %d)", algo_names[5], time_quantum);
     display_results(processes[5], n, rr_title);
+    display_gantt_chart(processes[5], n);
     
     printf("\n");
     print_box_header("COMPARISON SUMMARY");
@@ -171,11 +177,11 @@ void display_comparison(Process original[], int n, int time_quantum) {
     printf("%s┌──────────────────────────────────────────────────┐%s\n", ANSI_GREEN, ANSI_RESET);
     printf("%s│%s %sBest Performing Algorithms%s                  %s│%s\n", ANSI_GREEN, ANSI_RESET, ANSI_BOLD, ANSI_RESET, ANSI_GREEN, ANSI_RESET);
     printf("%s├──────────────────────────────────────────────────┤%s\n", ANSI_GREEN, ANSI_RESET);
-    printf("%s│%s ★ Lowest Avg Waiting Time    : %s%s%s (%.2f) %s│%s\n", 
+    printf("%s│%s ★ Lowest Avg Waiting Time    : %s%-11s%s (%.2f)  %s│%s\n", 
            ANSI_GREEN, ANSI_RESET, ANSI_BOLD ANSI_YELLOW, metrics[best_wt_idx].name, ANSI_RESET, min_wt, ANSI_GREEN, ANSI_RESET);
-    printf("%s│%s ★ Lowest Avg Turnaround Time : %s%s%s (%.2f) %s│%s\n", 
+    printf("%s│%s ★ Lowest Avg Turnaround Time : %s%-11s%s (%.2f)  %s│%s\n", 
            ANSI_GREEN, ANSI_RESET, ANSI_BOLD ANSI_YELLOW, metrics[best_tat_idx].name, ANSI_RESET, min_tat, ANSI_GREEN, ANSI_RESET);
-    printf("%s│%s ★ Lowest Avg Response Time   : %s%s%s (%.2f) %s│%s\n", 
+    printf("%s│%s ★ Lowest Avg Response Time   : %s%-11s%s (%.2f)  %s│%s\n", 
            ANSI_GREEN, ANSI_RESET, ANSI_BOLD ANSI_YELLOW, metrics[best_rt_idx].name, ANSI_RESET, min_rt, ANSI_GREEN, ANSI_RESET);
     printf("%s└──────────────────────────────────────────────────┘%s\n", ANSI_GREEN, ANSI_RESET);
     
@@ -201,12 +207,19 @@ void display_comparison(Process original[], int n, int time_quantum) {
         for (int j = 0; j < bar_len; j++) {
             printf("█");
         }
-        printf("%s %.2f", ANSI_RESET, metrics[i].avg_waiting_time);
+        printf("%s", ANSI_RESET);
         
-        // Add padding to align the right border
-        int remaining = 40 - bar_len;
-        for (int j = 0; j < remaining; j++) printf(" ");
-        printf("   %s│%s\n", ANSI_CYAN, ANSI_RESET);
+        // Calculate how many spaces we need for proper alignment
+        // Format: bars + space + number + spaces to reach column 70
+        char value_str[20];
+        snprintf(value_str, sizeof(value_str), " %.2f", metrics[i].avg_waiting_time);
+        int value_len = strlen(value_str);
+        int total_content = bar_len + value_len;
+        int padding = 52 - total_content; // 52 is the content width before the right border
+        
+        printf("%s", value_str);
+        for (int j = 0; j < padding; j++) printf(" ");
+        printf("%s│%s\n", ANSI_CYAN, ANSI_RESET);
     }
     
     printf("%s└──────────────────────────────────────────────────────────────────────┘%s\n", ANSI_CYAN, ANSI_RESET);
