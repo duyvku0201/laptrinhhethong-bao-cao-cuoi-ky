@@ -1,0 +1,111 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        Round Robin (Time Quantum = 2)                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+╔═════╦═════╦═════╦══════════╦═════╦═════╦═════╦═════╗
+║ PID ║  AT ║  BT ║ Priority ║  CT ║ TAT ║  WT ║  RT ║
+╠═════╬═════╬═════╬══════════╬═════╬═════╬═════╬═════╣
+║   1 ║   0 ║   5 ║        2 ║  14 ║  14 ║   9 ║   0 ║
+║   2 ║   1 ║   3 ║        1 ║  11 ║  10 ║   7 ║   1 ║
+║   3 ║   2 ║   8 ║        3 ║  22 ║  20 ║  12 ║   2 ║
+║   4 ║   3 ║   6 ║        2 ║  20 ║  17 ║  11 ║   5 ║
+╚═════╩═════╩═════╩══════════╩═════╩═════╩═════╩═════╝
+
+┌──────────────────────────────────────────────────┐
+│ Performance Metrics                          │
+├──────────────────────────────────────────────────┤
+│ Average Waiting Time    : 9.75                 │
+│ Average Turnaround Time : 15.25                │
+│ Average Response Time   : 2.00                 │
+│ Min/Max Waiting Time    : 7   / 12             │
+│ Min/Max Turnaround Time : 10  / 20             │
+│ CPU Utilization         : 100.00             % │
+│ Throughput              : 0.1818 proc/time   │
+└──────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                   GANTT CHART - Process Execution Timeline                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
++------+------+------+------+------+----+------+----+------+------+------+------+
+|  P1  |  P2  |  P3  |  P1  |  P4  | P2 |  P3  | P1 |  P4  |  P3  |  P4  |  P3  |
++------+------+------+------+------+----+------+----+------+------+------+------+
+0       2      4      6      8     10   11     13   14     16     18     20     22
+
+═══ Execution Timeline Details ═══
+Process    Start      End        Duration  
+─────────────────────────────────────────
+          P1      0          2          2         
+          P2      2          4          2         
+          P3      4          6          2         
+          P1      6          8          2         
+          P4      8          10         2         
+          P2      10         11         1         
+          P3      11         13         2         
+          P1      13         14         1         
+          P4      14         16         2         
+          P3      16         18         2         
+          P4      18         20         2         
+          P3      20         22         2         
+─────────────────────────────────────────
+
+═══ Process Execution Summary ═══
+Process    Total CPU Time  # of Runs 
+─────────────────────────────────────────
+          P1      5               3         
+          P2      3               2         
+          P3      8               4         
+          P4      6               3         
+
+└─ Each block shows when each process was actively running on the CPU
+└─ Context switches are visible as process changes
+
+
+Test Case Analysis for Round Robin (Time Quantum = 2):
+======================================================
+Input: 4 processes, Time Quantum = 2
+P1: AT=0, BT=5, Priority=2
+P2: AT=1, BT=3, Priority=1
+P3: AT=2, BT=8, Priority=3
+P4: AT=3, BT=6, Priority=2
+
+Execution Timeline (Ready Queue in FCFS order):
+------------------------------------------------
+Time 0-2: P1 runs (2 units), remaining=3
+          Queue at time 2: [P2(AT=1), P3(AT=2)]
+Time 2-4: P2 runs (2 units), remaining=1
+          Queue at time 4: [P3, P1, P4(AT=3)]
+Time 4-6: P3 runs (2 units), remaining=6
+          Queue at time 6: [P1, P4, P2]
+Time 6-8: P1 runs (2 units), remaining=1
+          Queue at time 8: [P4, P2, P3]
+Time 8-10: P4 runs (2 units), remaining=4
+           Queue at time 10: [P2, P3, P1]
+Time 10-11: P2 runs (1 unit), remaining=0, COMPLETES
+            Queue at time 11: [P3, P1, P4]
+Time 11-13: P3 runs (2 units), remaining=4
+            Queue at time 13: [P1, P4, P3]
+Time 13-14: P1 runs (1 unit), remaining=0, COMPLETES
+            Queue at time 14: [P4, P3]
+Time 14-16: P4 runs (2 units), remaining=2
+            Queue at time 16: [P3, P4]
+Time 16-18: P3 runs (2 units), remaining=2
+            Queue at time 18: [P4, P3]
+Time 18-20: P4 runs (2 units), remaining=0, COMPLETES
+            Queue at time 20: [P3]
+Time 20-22: P3 runs (2 units), remaining=0, COMPLETES
+
+Calculations:
+-------------
+P1: CT=14, TAT=14-0=14, WT=14-5=9, RT=0 (started at time 0)
+P2: CT=11, TAT=11-1=10, WT=10-3=7, RT=2-1=1 (first started at time 2)
+P3: CT=22, TAT=22-2=20, WT=20-8=12, RT=4-2=2 (first started at time 4)
+P4: CT=20, TAT=20-3=17, WT=17-6=11, RT=8-3=5 (first started at time 8)
+
+Average Waiting Time: (9+7+12+11)/4 = 9.75
+Average Turnaround Time: (14+10+20+17)/4 = 15.25
+Average Response Time: (0+1+2+5)/4 = 2.00
+
+Context Switches: 11 (P1→P2→P3→P1→P4→P2→P3→P1→P4→P3→P4→P3)
