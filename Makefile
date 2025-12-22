@@ -217,7 +217,8 @@ test-rr:
 	@$(CC) $(CFLAGS) -o $(BUILD_DIR)/test_rr \
 		$(TEST_DIR)/test_round_robin.c \
 		$(RR_SRC) \
-		$(QUEUE_SRC) -lm
+		$(QUEUE_SRC) \
+		$(PROCESS_SRC) -lm
 	@echo "Running Round Robin tests..."
 	@echo "\n=== Test 1: test_rr_main.txt (TQ=3) ==="
 	@./$(BUILD_DIR)/test_rr $(TEST_DIR)/test_cases/test_rr_main.txt 3
