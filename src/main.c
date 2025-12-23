@@ -1,12 +1,11 @@
-﻿
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 
 /**
  * @file main.c
  * @brief Main entry point của chương trình
  */
 
- #define DEFAULT_TIME_QUANTUM 2
+#define DEFAULT_TIME_QUANTUM 2
 
 #include "process.h"
 #include "algorithms.h"
@@ -16,16 +15,10 @@
 #include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h> // Thêm thư viện để so sánh chuỗi nếu cần
 
  /**
   * @brief Main function
-  * Flow:
-  * 1. Hiển thị header
-  * 2. Đọc input (file hoặc keyboard)
-  * 3. Hiển thị menu chọn algorithm
-  * 4. Chạy algorithm được chọn
-  * 5. Hiển thị kết quả
-  * 6. Lặp lại hoặc exit
   */
 int main() {
     // Khai báo biến
@@ -34,6 +27,7 @@ int main() {
     int n = 0;                         // Số processes
     int choice;                        // Lựa chọn của user
     int time_quantum;                  // Time quantum cho RR
+    int c;                             // Biến tạm để xóa buffer
 
     // Clear screen and display welcome message
     clear_screen();
@@ -52,16 +46,23 @@ int main() {
     int input_choice = display_input_menu();
 
     if (input_choice == 1) {
-        // Read from file
+        // --- CHỈNH SỬA 1: Vòng lặp nhập file cho đến khi đúng ---
         char filename[256];
-        printf("\n%sEnter filename%s (e.g., tests/test_cases/test1.txt): ", ANSI_BOLD, ANSI_RESET);
-        scanf("%s", filename);
+        int file_loaded = 0;
 
-        if (!read_from_file(filename, processes, &n)) {
-            printf("%sError reading file. Exiting.%s\n", ANSI_RED, ANSI_RESET);
-            return 1;
+        while (!file_loaded) {
+            printf("\n%sEnter filename%s (e.g., tests/test_cases/test1.txt): ", ANSI_BOLD, ANSI_RESET);
+            scanf("%s", filename);
+
+            if (read_from_file(filename, processes, &n)) {
+                printf("%s✓ Successfully loaded %d processes%s\n", ANSI_GREEN, n, ANSI_RESET);
+                file_loaded = 1; // Thoát vòng lặp
+            }
+            else {
+                printf("%sError reading file. Please try again.%s\n", ANSI_RED, ANSI_RESET);
+                // Vòng lặp sẽ tiếp tục quay lại yêu cầu nhập file
+            }
         }
-        printf("%s✓ Successfully loaded %d processes%s\n", ANSI_GREEN, n, ANSI_RESET);
     }
     else if (input_choice == 2) {
         // Read from keyboard
@@ -84,7 +85,7 @@ int main() {
     do {
         // Clear screen before showing menu
         clear_screen();
-        
+
         // Reset processes về trạng thái ban đầu
         copy_processes(processes, original, n);
 
@@ -171,6 +172,10 @@ int main() {
 
         // Pause để user đọc kết quả
         if (choice != 8) {
+            // --- CHỈNH SỬA 2: Xóa bộ nhớ đệm trước khi pause ---
+            // Lệnh này sẽ 'ăn' hết các ký tự thừa (như dấu Enter) còn sót lại
+            while ((c = getchar()) != '\n' && c != EOF);
+
             pause_enter();
         }
 
