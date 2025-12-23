@@ -5,6 +5,8 @@
 
 #include "../include/process.h"
 #include "../include/algorithms.h"
+#include "../include/display.h"
+#include "../include/metrics.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,6 +41,31 @@ int read_processes_from_file(const char *filename, Process processes[]) {
     return n;
 }
 
+// Calculate average metrics
+void calculate_avg_metrics(Process processes[], int n, 
+                          float *avg_wt, float *avg_tat, float *avg_rt) {
+    if (n <= 0) {
+        *avg_wt = *avg_tat = *avg_rt = 0;
+        return;
+    }
+    
+    long sum_wt = 0, sum_tat = 0, sum_rt = 0;
+    int counted_rt = 0;
+    
+    for (int i = 0; i < n; i++) {
+        sum_wt += processes[i].WaitingTime;
+        sum_tat += processes[i].TurnaroundTime;
+        if (processes[i].ResponseTime >= 0) {
+            sum_rt += processes[i].ResponseTime;
+            counted_rt++;
+        }
+    }
+    
+    *avg_wt = (float)sum_wt / n;
+    *avg_tat = (float)sum_tat / n;
+    *avg_rt = counted_rt > 0 ? (float)sum_rt / counted_rt : 0;
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Usage: %s <input_file> [time_quantum]\n", argv[0]);
@@ -63,12 +90,15 @@ int main(int argc, char *argv[]) {
         }
     }
     
-    printf("Testing Round Robin with %d processes and time quantum = %d\n", n, time_quantum);
-    printf("Input file: %s\n\n", argv[1]);
-    
-    // Print input
-    printf("Input Processes:\n");
+    printf("\n");
+    printf("╔════════════════════════════════════════════════════╗\n");
+    printf("║         ROUND ROBIN TEST PROGRAM                   ║\n");
+    printf("╚════════════════════════════════════════════════════╝\n");
+    printf("\nInput file: %s\n", argv[1]);
+    printf("Time Quantum: %d\n", time_quantum);
+    printf("\nInput Processes:\n");
     printf("PID\tAT\tBT\tPriority\n");
+    printf("────────────────────────\n");
     for (int i = 0; i < n; i++) {
         printf("%d\t%d\t%d\t%d\n",
                processes[i].ProcessId,
@@ -80,6 +110,22 @@ int main(int argc, char *argv[]) {
     
     // Run Round Robin
     round_robin(processes, n, time_quantum);
+    
+    // Display results
+    float avg_wt, avg_tat, avg_rt;
+    calculate_avg_metrics(processes, n, &avg_wt, &avg_tat, &avg_rt);
+    
+    char title[100];
+    snprintf(title, sizeof(title), "Round Robin (Time Quantum = %d)", time_quantum);
+    display_results(processes, n, title);
+    
+    // Display Gantt chart
+    display_gantt_chart(processes, n);
+    
+    printf("\n");
+    printf("╔════════════════════════════════════════════════════╗\n");
+    printf("║         TEST COMPLETED SUCCESSFULLY                ║\n");
+    printf("╚════════════════════════════════════════════════════╝\n");
     
     return 0;
 }
